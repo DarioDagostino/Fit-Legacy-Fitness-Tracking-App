@@ -42,7 +42,7 @@ class _CaminoLegadoScreenState extends ConsumerState<CaminoLegadoScreen> {
           title: const Text('Camino Legado'),
           backgroundColor: Colors.indigo,
         ),
-        SliverList.builder(
+        SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               if (index >= items.length) {

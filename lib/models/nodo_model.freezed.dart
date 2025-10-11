@@ -10,6 +10,11 @@ part of 'nodo_model.dart';
 
 T _$identity<T>(T value) => value;
 
+final _privateConstructorUsedError = UnsupportedError(
+  'It seems like you constructed your class using `MyClass._()`.\n'
+  'This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\n'
+  'Please check the documentation here for more information: https://github.com/rrousselGit/freezed');
+
 NodoModel _$NodoModelFromJson(Map<String, dynamic> json) {
   return _NodoModel.fromJson(json);
 }
@@ -99,7 +104,8 @@ class _$_NodoModel implements _NodoModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  @override
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_NodoModel &&

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/validators.dart';
+import '../widgets/auth_card.dart';
+import '../widgets/auth_logo.dart';
+import '../core/constants/app_colors.dart';
+import '../core/constants/app_text_styles.dart';
+import '../core/constants/app_strings.dart';
+import '../core/constants/app_routes.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -42,22 +48,47 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reset password')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: Validators.validateEmail,
-                keyboardType: TextInputType.emailAddress,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0F172A), Color(0xFF0B1220)],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+            child: AuthCard(
+              header: Column(
+                children: [
+                  const AuthLogo(size: 74),
+                  const SizedBox(height: 12),
+                  Text(AppStrings.resetTitle, style: AppTextStyles.headline1.copyWith(color: Colors.white)),
+                ],
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _submit, child: const Text('Send reset link')),
-            ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(labelText: AppStrings.emailLabel, prefixIcon: Icon(Icons.email_outlined)),
+                      validator: Validators.validateEmail,
+                      keyboardType: TextInputType.emailAddress,
+                      style: AppTextStyles.body1.copyWith(color: AppColors.textPrimary),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(onPressed: _submit, style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), child: Text(AppStrings.resetButton, style: AppTextStyles.button.copyWith(color: AppColors.primary))),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(onPressed: () => Navigator.pushNamed(context, AppRoutes.login), child: Text(AppStrings.loginTitle)),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

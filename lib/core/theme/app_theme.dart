@@ -16,11 +16,11 @@ class AppTheme {
         surface: AppColors.surface,
       ),
       textTheme: TextTheme(
-        headline1: AppTextStyles.headline1,
-        headline2: AppTextStyles.headline2,
-        bodyText1: AppTextStyles.body1,
-        button: AppTextStyles.button,
-        caption: AppTextStyles.caption,
+        headlineLarge: AppTextStyles.headline1,
+        headlineMedium: AppTextStyles.headline2,
+        bodyLarge: AppTextStyles.body1,
+        labelLarge: AppTextStyles.button,
+        bodySmall: AppTextStyles.caption,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.primaryVariant,
