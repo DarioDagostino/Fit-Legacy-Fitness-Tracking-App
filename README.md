@@ -31,3 +31,31 @@ If you already have files to add, include them with `git add .` before committin
 - Add a short project description and development setup steps (dependencies, run commands).
 - If this is a Node/React project, create `package.json` next with `npm init` and add a basic `README` section about scripts.
 - Consider adding a LICENSE file when you decide on a license.
+
+## Repository maintenance
+
+This project includes design assets and generated files that may be large. The following guidance helps keep the repository healthy on GitHub.
+
+- Git LFS (Large File Storage): For large binary assets (PDFs, PSDs, high-resolution images, Figma exports) enable Git LFS locally and track large file patterns. Example commands (PowerShell):
+
+```powershell
+# install Git LFS (one-time)
+# choco install git-lfs -y ; git lfs install
+
+# track common large assets (run once in repo root)
+git lfs track "assets/**/*.psd"
+git lfs track "assets/**/*.pdf"
+git lfs track "assets/**/*.png"
+git lfs track "assets/**/*.jpg"
+git lfs track "assets/**/*.zip"
+
+# commit .gitattributes file created by git-lfs
+git add .gitattributes
+git commit -m "chore: add Git LFS tracking for large assets"
+```
+
+- Continuous Integration (GitHub Actions): This repo includes a simple Flutter CI workflow that runs on push and pull request to `main`. It performs `flutter pub get`, `dart analyze`, runs unit tests and attempts a debug build for the current platform. See `.github/workflows/flutter-ci.yml` for details.
+
+- Pull Request template: A lightweight PR template is included to make reviews quicker. Use the template when opening PRs.
+
+If you'd like, I can enable/adjust GitHub Actions matrixes (Windows/macOS/Linux), add code signing steps, or wire the workflow to upload artifacts.
