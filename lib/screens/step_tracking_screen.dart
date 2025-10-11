@@ -3,8 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants/app_colors.dart';
 import '../core/constants/app_text_styles.dart';
 import '../services/legacito_service.dart';
+import '../services/event_service.dart';
+import '../services/streaks_service.dart';
 
 final mockStepsProvider = StateNotifierProvider<MockStepsNotifier, int>((ref) => MockStepsNotifier());
+final _eventService = EventService();
+final _streaksService = StreaksService();
 
 class MockStepsNotifier extends StateNotifier<int> {
   MockStepsNotifier(): super(4367) {
@@ -69,8 +73,18 @@ class StepTrackingScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton.icon(onPressed: () => ref.read(mockStepsProvider.notifier).add(500), icon: const Icon(Icons.directions_walk), label: const Text('+500')),
-                ElevatedButton.icon(onPressed: () => ref.read(mockStepsProvider.notifier).add(1000), icon: const Icon(Icons.add), label: const Text('+1000')),
+                ElevatedButton.icon(onPressed: () async { 
+                    ref.read(mockStepsProvider.notifier).add(500);
+                    final now = DateTime.now().toUtc();
+                    await _eventService.enqueueEvent({'type':'goal_completed','source':'steps','timestamp': now.toIso8601String(), 'goalId':'step_500','points':500});
+                    await _streaksService.processGoalCompleted(type: 'daily', goalId: 'step_500', timestamp: now);
+                  }, icon: const Icon(Icons.directions_walk), label: const Text('+500')),
+                ElevatedButton.icon(onPressed: () async { 
+                    ref.read(mockStepsProvider.notifier).add(1000);
+                    final now = DateTime.now().toUtc();
+                    await _eventService.enqueueEvent({'type':'goal_completed','source':'steps','timestamp': now.toIso8601String(), 'goalId':'step_1000','points':1000});
+                    await _streaksService.processGoalCompleted(type: 'daily', goalId: 'step_1000', timestamp: now);
+                  }, icon: const Icon(Icons.add), label: const Text('+1000')),
                 OutlinedButton(onPressed: () => ref.read(mockStepsProvider.notifier).reset(), child: const Text('Reset')),
               ],
             ),
