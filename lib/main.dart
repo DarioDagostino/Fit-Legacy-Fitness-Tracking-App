@@ -15,9 +15,15 @@ import 'core/constants/app_strings.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Run flutterfire configure to generate firebase_options.dart with your project settings
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // If flutterfire hasn't been run yet the placeholder returns null.
+  // In that case initialize without options and the app can still run (useful for local dev until config is added).
+  if (DefaultFirebaseOptions.currentPlatform == null) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   runApp(const ProviderScope(child: MyApp()));
 }
 
