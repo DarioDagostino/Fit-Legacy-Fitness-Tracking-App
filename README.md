@@ -27,6 +27,10 @@ git push -u origin main
 
 If you already have files to add, include them with `git add .` before committing.
 
+## Important Guides
+- **[Package Update Guide](PACKAGE_UPDATE_GUIDE.md)** — How to resolve discontinued package warnings and update dependencies
+- **[Firebase Setup Guide](FIREBASE_SETUP.md)** — How to configure Firebase for the app
+
 ## Next suggestions
 - Add a short project description and development setup steps (dependencies, run commands).
 - If this is a Node/React project, create `package.json` next with `npm init` and add a basic `README` section about scripts.
