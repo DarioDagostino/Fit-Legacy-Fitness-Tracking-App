@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/streak_state.dart';
 import '../models/achievement.dart';
-import '../models/event_model.dart';
 import '../utils/logger.dart';
 
 class StreaksService {
