@@ -10,7 +10,6 @@ class AuthLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Attempt to load an asset at assets/images/logo.png. If it doesn't exist, render fallback.
-    const path = 'assets/images/logo.png';
     // Prefer SVG if available, then PNG. Use rootBundle to try loads.
     return FutureBuilder<String?>(
       future: _selectAsset(),
