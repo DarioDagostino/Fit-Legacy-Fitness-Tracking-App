@@ -63,14 +63,15 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
             child: AuthCard(
+              maxWidth: 420,
               header: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Logo placeholder — replace with Image.asset or SvgPicture for pixel-perfect
-                  const AuthLogo(size: 74),
-                  const SizedBox(height: 12),
+                  const AuthLogo(size: 80),
+                  const SizedBox(height: 10),
                   Text(AppStrings.loginTitle, style: AppTextStyles.headline1.copyWith(color: Colors.white)),
-                  const SizedBox(height: 6),
-                  Text('Bienvenido de nuevo', style: AppTextStyles.body1.copyWith(color: Colors.white)),
+                  const SizedBox(height: 4),
+                  Text('Bienvenido de nuevo', style: AppTextStyles.body1.copyWith(color: Colors.white.withOpacity(0.9))),
                 ],
               ),
               child: Form(
@@ -79,7 +80,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     TextFormField(
                       controller: _emailController,
-                      decoration: const InputDecoration(labelText: AppStrings.emailLabel, prefixIcon: Icon(Icons.email_outlined)),
+                      decoration: InputDecoration(
+                        labelText: AppStrings.emailLabel,
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        filled: true,
+                        fillColor: AppColors.surface.withOpacity(0.98),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      ),
                       validator: Validators.validateEmail,
                       keyboardType: TextInputType.emailAddress,
                       style: AppTextStyles.body1.copyWith(color: AppColors.textPrimary),
@@ -91,7 +99,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _submit,
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.accent,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          elevation: 0,
+                        ),
                         child: Text(AppStrings.loginButton, style: AppTextStyles.button.copyWith(color: AppColors.primary)),
                       ),
                     ),
