@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/nodo_notifier.dart';
 import '../models/nodo_model.dart';
+import '../core/constants/app_routes.dart';
 
 class CaminoLegadoScreen extends ConsumerStatefulWidget {
   const CaminoLegadoScreen({super.key});
@@ -76,6 +77,14 @@ class _CaminoLegadoScreenState extends ConsumerState<CaminoLegadoScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, st) => Center(child: Text('Error: $e')),
         data: (items) => _buildContent(items, ref.read(nodoNotifierProvider.notifier).hasMore),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, AppRoutes.figmaWidgetDemo);
+        },
+        icon: const Icon(Icons.widgets),
+        label: const Text('Widgets Demo'),
+        tooltip: 'Ver demo de FigmaWidget',
       ),
     );
   }
