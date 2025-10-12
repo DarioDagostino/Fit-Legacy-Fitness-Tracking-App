@@ -26,7 +26,7 @@ mixin _$NodoModel {
   String get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NodoModelCopyWith<NodoModel> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -117,7 +117,7 @@ class _$_NodoModel implements _NodoModel {
   @override
   int get hashCode => Object.hash(runtimeType, id, title, description);
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   _$$_NodoModelCopyWith<_$_NodoModel> get copyWith => __$$_NodoModelCopyWithImpl<_$_NodoModel>(this, _$identity);
 
@@ -139,6 +139,6 @@ abstract class _NodoModel implements NodoModel {
   @override
   String get description;
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$_NodoModelCopyWith<_$_NodoModel> get copyWith => throw _privateConstructorUsedError;
 }
