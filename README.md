@@ -27,6 +27,29 @@ git push -u origin main
 
 If you already have files to add, include them with `git add .` before committing.
 
+## Development Setup
+
+### Android SDK Configuration
+
+This project requires Android SDK for building and running on Android devices. To diagnose and configure your Android SDK setup:
+
+```powershell
+# Check Android SDK configuration
+.\scripts\android_sdk_diagnostics.ps1
+
+# Check and accept Android licenses
+.\scripts\android_sdk_diagnostics.ps1 -TryAcceptLicenses
+```
+
+The diagnostics script will:
+- Check if `sdkmanager` is on PATH
+- Search common SDK locations
+- Verify ANDROID_SDK_ROOT environment variable
+- Check Java/JDK availability
+- Optionally help you accept Android SDK licenses
+
+For detailed Firebase setup instructions, see [FIREBASE_SETUP.md](FIREBASE_SETUP.md).
+
 ## Next suggestions
 - Add a short project description and development setup steps (dependencies, run commands).
 - If this is a Node/React project, create `package.json` next with `npm init` and add a basic `README` section about scripts.

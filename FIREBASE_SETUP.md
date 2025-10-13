@@ -43,6 +43,9 @@ flutter run
 
 Notes and troubleshooting:
 - If `flutterfire configure` fails due to missing Android SDK cmdline-tools, install them via Android Studio SDK manager or follow Android docs to install command-line tools.
+- To diagnose Android SDK setup issues, run the diagnostics script: `.\scripts\android_sdk_diagnostics.ps1`
+  - This script checks for sdkmanager, verifies environment variables, and can help accept Android licenses
+  - Run with `-TryAcceptLicenses` flag to attempt accepting licenses interactively
 - If you want CI-friendly setup, commit the generated `lib/firebase_options.dart` to the repo (safe for client-only config) or store the values in secure env vars and inject during build.
 
 If you'd like, I can try to run `flutterfire configure` from this session, but I can't authorize the Google sign-in flow interactively. It's recommended you run steps 1-3 locally on your machine.
