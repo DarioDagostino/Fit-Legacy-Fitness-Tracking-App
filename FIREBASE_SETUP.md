@@ -45,4 +45,6 @@ Notes and troubleshooting:
 - If `flutterfire configure` fails due to missing Android SDK cmdline-tools, install them via Android Studio SDK manager or follow Android docs to install command-line tools.
 - If you want CI-friendly setup, commit the generated `lib/firebase_options.dart` to the repo (safe for client-only config) or store the values in secure env vars and inject during build.
 
+**Windows-specific:** If you encounter CMake build errors (file extraction failures, cache errors), your project might be in an OneDrive-synced folder or a path with spaces. See [WINDOWS_BUILD_TROUBLESHOOTING.md](WINDOWS_BUILD_TROUBLESHOOTING.md) for detailed solutions. The recommended fix is to move your project to a simple local path like `C:\dev\fit-legacy`.
+
 If you'd like, I can try to run `flutterfire configure` from this session, but I can't authorize the Google sign-in flow interactively. It's recommended you run steps 1-3 locally on your machine.
