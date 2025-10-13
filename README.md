@@ -32,6 +32,49 @@ If you already have files to add, include them with `git add .` before committin
 - If this is a Node/React project, create `package.json` next with `npm init` and add a basic `README` section about scripts.
 - Consider adding a LICENSE file when you decide on a license.
 
+## New: FigmaWidget Component 🎨
+
+A flexible, highly customizable widget component for implementing Figma designs quickly and consistently!
+
+**Features:**
+- ✅ 25+ configurable properties (colors, gradients, icons, animations)
+- ✅ 7 ready-to-use presets (info, success, warning, achievement, progress, action, compact)
+- ✅ Interactive demo screen accessible from the app
+- ✅ Comprehensive documentation with 10+ real-world examples
+
+**Quick Start:**
+```dart
+import 'package:fit_legacy_app/widgets/figma_widget.dart';
+
+// Use a preset
+FigmaWidgetPresets.successCard(
+  title: '¡Completado!',
+  description: 'Has logrado tu objetivo',
+  onTap: () {},
+)
+
+// Or customize
+FigmaWidget(
+  title: 'My Widget',
+  icon: Icons.star,
+  backgroundGradient: LinearGradient(...),
+  animated: true,
+)
+```
+
+**Documentation:**
+- 📘 **Quick Start:** `assets/docs/QUICK_START.md`
+- 📗 **Complete Guide:** `assets/docs/figma_widget_guide.md`
+- 📙 **Examples:** `assets/docs/figma_widget_examples.md`
+- 📕 **Visual Guide:** `assets/docs/figma_widget_visual_guide.md`
+- 📄 **Summary:** `FIGMA_WIDGET_SUMMARY.md`
+
+**Try the Demo:**
+- Run the app and tap the "Widgets Demo" button on the main screen
+- Or navigate to: `Navigator.pushNamed(context, AppRoutes.figmaWidgetDemo)`
+
+---
+
 ## Repository maintenance
 
 This project includes design assets and generated files that may be large. The following guidance helps keep the repository healthy on GitHub.
