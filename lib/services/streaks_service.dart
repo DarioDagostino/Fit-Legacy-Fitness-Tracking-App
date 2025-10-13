@@ -61,6 +61,36 @@ class StreaksService {
     }
   }
 
+  Future<StreakState?> getStreakById(String streakId) async {
+    try {
+      final streaks = await loadAll();
+      for (final streak in streaks) {
+        if (streak.streakId == streakId) {
+          return streak;
+        }
+      }
+      return null;
+    } catch (e) {
+      StreaksLogger.error('Error getting streak by id: $e', error: e);
+      return null;
+    }
+  }
+
+  Future<void> resetStreak(String streakId) async {
+    try {
+      final states = await loadAll();
+      final index = states.indexWhere((s) => s.streakId == streakId);
+      if (index != -1) {
+        final streak = states[index];
+        states[index] = streak.copyWith(length: 0, lastUpdated: null, active: false);
+        await saveAll(states);
+      }
+    } catch (e) {
+      StreaksLogger.error('Error resetting streak: $e', error: e);
+      rethrow;
+    }
+  }
+
   Future<List<Achievement>> loadAchievements() async {
     try {
       // Usar cache si está disponible

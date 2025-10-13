@@ -28,6 +28,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // Reducir recursos empaquetados sólo a locales necesarios
+        resConfigs("en", "es")
     }
 
     buildTypes {
@@ -35,6 +37,33 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+
+            // Habilitar R8 (minify) y shrink de recursos para reducir el tamaño del APK/AAB
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            // Mantener configuración de debug sin ofuscación
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+    }
+
+    // Generar APKs divididos por ABI para reducir tamaños en distribuciones de APK
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86_64")
+            isUniversalApk = false
+        }
+        // Habilitar si se desea dividir por densidad de pantalla al generar APKs
+        density {
+            isEnable = true
         }
     }
 }

@@ -1,0 +1,38 @@
+name: performance
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  size-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build Android appbundle (release)
+        run: flutter build appbundle --release
+
+      - name: Extract AAB size
+        run: |
+          AAB=$(ls build/app/outputs/bundle/release/*.aab | head -n1)
+          SIZE=$(stat -c%s "$AAB")
+          echo "aab_size=$SIZE" >> $GITHUB_OUTPUT
+        id: size
+
+      - name: Enforce size budget
+        run: |
+          MAX_SIZE=$((60 * 1024 * 1024)) # 60 MB budget
+          if [ "${{ steps.size.outputs.aab_size }}" -gt "$MAX_SIZE" ]; then
+            echo "Bundle excede el presupuesto: $(( ${{ steps.size.outputs.aab_size }} / 1024 / 1024 )) MB";
+            exit 1;
+          else
+            echo "Bundle dentro del presupuesto.";
+          fi

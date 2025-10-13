@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import '../firebase_options.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,18 +19,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // wait 2 seconds then check auth state once and navigate accordingly
-    Future.delayed(const Duration(seconds: 2), () async {
-      if (!mounted) return;
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed('/camino');
-      } else {
-        if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed('/login');
-      }
-    });
+    // Inicializar Firebase en segundo plano mientras mostramos splash
+    _initializeAndNavigate();
   }
 
   @override
@@ -80,5 +72,31 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _initializeAndNavigate() async {
+    try {
+      // Intentar inicializar Firebase de forma perezosa
+      if (Firebase.apps.isEmpty) {
+        if (DefaultFirebaseOptions.currentPlatform == null) {
+          await Firebase.initializeApp();
+        } else {
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+        }
+      }
+
+      // Pequeño retardo para mostrar el splash y permitir primer frame estable
+      await Future.delayed(const Duration(milliseconds: 600));
+
+      if (!mounted) return;
+      final user = FirebaseAuth.instance.currentUser;
+      Navigator.of(context).pushReplacementNamed(user != null ? '/camino' : '/login');
+    } catch (e) {
+      if (!mounted) return;
+      // En caso de fallo, continuar a login para no bloquear TTI
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 }

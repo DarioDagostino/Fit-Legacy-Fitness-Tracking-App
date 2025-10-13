@@ -234,7 +234,7 @@ class _StepTrackingScreenState extends ConsumerState<StepTrackingScreen>
           children: [
             Text(
               'Historial semanal',
-              style: AppTextStyles.titleMedium?.copyWith(
+              style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -269,7 +269,7 @@ class _StepTrackingScreenState extends ConsumerState<StepTrackingScreen>
                     children: [
                       Text(
                         '${(dayProgress * 100).toStringAsFixed(0)}%',
-                        style: AppTextStyles.bodySmall?.copyWith(
+                        style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
