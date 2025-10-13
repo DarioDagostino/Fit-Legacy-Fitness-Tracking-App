@@ -3,7 +3,14 @@
 Minimal starter README for the Fit Legacy project.
 
 ## What this is
-A placeholder README and .gitignore to initialize the repository. Replace this with your project description and development instructions when ready.
+A Flutter fitness tracking application with Firebase authentication and cloud storage.
+
+## Getting Started
+
+### Windows Users
+**[📘 Windows Quick Start Guide](WINDOWS_QUICK_START.md)** - Complete setup instructions for Windows development.
+
+**Important:** On Windows, clone this project to a simple path like `C:\dev\fit-legacy`, NOT in OneDrive-synced folders to avoid CMake build errors.
 
 ## Files created
 - `README.md` — this file
@@ -26,6 +33,26 @@ git push -u origin main
 ```
 
 If you already have files to add, include them with `git add .` before committing.
+
+## Troubleshooting
+
+### Windows Build Issues
+
+If you encounter CMake build errors on Windows (especially file extraction or cache errors), see the comprehensive troubleshooting guide:
+
+**[📖 Windows Build Troubleshooting Guide](WINDOWS_BUILD_TROUBLESHOOTING.md)**
+
+Common issues include:
+- Project located in OneDrive-synced folders
+- Paths with spaces or special characters
+- Path length exceeding Windows limits
+- Antivirus interference
+
+**Quick fix:** Move your project to a simple path like `C:\dev\fit-legacy` (outside OneDrive).
+
+### Firebase Setup
+
+See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for instructions on configuring Firebase for this project.
 
 ## Next suggestions
 - Add a short project description and development setup steps (dependencies, run commands).
