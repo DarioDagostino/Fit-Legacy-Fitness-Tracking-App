@@ -1,4 +1,4 @@
-'''package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:fit_legacy_app/domain/repositories/pasos_repository.dart';
 import 'package:fit_legacy_app/services/streaks_service.dart';
@@ -45,4 +45,3 @@ class PasosNotifier extends StateNotifier<PasosState> {
     );
   }
 }
-'''

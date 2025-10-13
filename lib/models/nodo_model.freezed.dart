@@ -1,6 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'nodo_model.dart';
 
@@ -11,9 +12,7 @@ part of 'nodo_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`.\n'
-  'This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\n'
-  'Please check the documentation here for more information: https://github.com/rrousselGit/freezed');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 NodoModel _$NodoModelFromJson(Map<String, dynamic> json) {
   return _NodoModel.fromJson(json);
@@ -25,25 +24,37 @@ mixin _$NodoModel {
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
 
+  /// Serializes this NodoModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of NodoModel
+  /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NodoModelCopyWith<NodoModel> get copyWith => throw _privateConstructorUsedError;
+  $NodoModelCopyWith<NodoModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $NodoModelCopyWith<$Res> {
-  factory $NodoModelCopyWith(NodoModel value, $Res Function(NodoModel) then) = _$NodoModelCopyWithImpl<$Res, NodoModel>;
+  factory $NodoModelCopyWith(NodoModel value, $Res Function(NodoModel) then) =
+      _$NodoModelCopyWithImpl<$Res, NodoModel>;
+  @useResult
   $Res call({String id, String title, String description});
 }
 
 /// @nodoc
-class _$NodoModelCopyWithImpl<$Res, $Val extends NodoModel> implements $NodoModelCopyWith<$Res> {
+class _$NodoModelCopyWithImpl<$Res, $Val extends NodoModel>
+    implements $NodoModelCopyWith<$Res> {
   _$NodoModelCopyWithImpl(this._value, this._then);
 
+  // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NodoModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = null,
@@ -51,45 +62,75 @@ class _$NodoModelCopyWithImpl<$Res, $Val extends NodoModel> implements $NodoMode
     Object? description = null,
   }) {
     return _then(_value.copyWith(
-      id: id == null ? _value.id : id as String,
-      title: title == null ? _value.title : title as String,
-      description: description == null ? _value.description : description as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_NodoModelCopyWith<$Res> implements $NodoModelCopyWith<$Res> {
-  factory _$$_NodoModelCopyWith(_$_NodoModel value, $Res Function(_$_NodoModel) then) = __$$_NodoModelCopyWithImpl<$Res>;
+abstract class _$$NodoModelImplCopyWith<$Res>
+    implements $NodoModelCopyWith<$Res> {
+  factory _$$NodoModelImplCopyWith(
+          _$NodoModelImpl value, $Res Function(_$NodoModelImpl) then) =
+      __$$NodoModelImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String id, String title, String description});
 }
 
 /// @nodoc
-class __$$_NodoModelCopyWithImpl<$Res> extends _$NodoModelCopyWithImpl<$Res, _$_NodoModel> implements _$$_NodoModelCopyWith<$Res> {
-  __$$_NodoModelCopyWithImpl(_$_NodoModel _value, $Res Function(_$_NodoModel) _then)
+class __$$NodoModelImplCopyWithImpl<$Res>
+    extends _$NodoModelCopyWithImpl<$Res, _$NodoModelImpl>
+    implements _$$NodoModelImplCopyWith<$Res> {
+  __$$NodoModelImplCopyWithImpl(
+      _$NodoModelImpl _value, $Res Function(_$NodoModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NodoModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = null,
     Object? title = null,
     Object? description = null,
   }) {
-    return _then(_$_NodoModel(
-      id: id == null ? _value.id : id as String,
-      title: title == null ? _value.title : title as String,
-      description: description == null ? _value.description : description as String,
+    return _then(_$NodoModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_NodoModel implements _NodoModel {
-  const _$_NodoModel({required this.id, required this.title, required this.description});
+class _$NodoModelImpl implements _NodoModel {
+  const _$NodoModelImpl(
+      {required this.id, required this.title, required this.description});
 
-  factory _$_NodoModel.fromJson(Map<String, dynamic> json) => _$$_NodoModelFromJson(json);
+  factory _$NodoModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NodoModelImplFromJson(json);
 
   @override
   final String id;
@@ -104,33 +145,44 @@ class _$_NodoModel implements _NodoModel {
   }
 
   @override
-  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NodoModel &&
+            other is _$NodoModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.description, description) || other.description == description));
+            (identical(other.description, description) ||
+                other.description == description));
   }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, id, title, description);
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  _$$_NodoModelCopyWith<_$_NodoModel> get copyWith => __$$_NodoModelCopyWithImpl<_$_NodoModel>(this, _$identity);
+  int get hashCode => Object.hash(runtimeType, id, title, description);
+
+  /// Create a copy of NodoModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NodoModelImplCopyWith<_$NodoModelImpl> get copyWith =>
+      __$$NodoModelImplCopyWithImpl<_$NodoModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_NodoModelToJson(this);
+    return _$$NodoModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _NodoModel implements NodoModel {
-  const factory _NodoModel({required final String id, required final String title, required final String description}) = _$_NodoModel;
+  const factory _NodoModel(
+      {required final String id,
+      required final String title,
+      required final String description}) = _$NodoModelImpl;
 
-  factory _NodoModel.fromJson(Map<String, dynamic> json) = _$_NodoModel.fromJson;
+  factory _NodoModel.fromJson(Map<String, dynamic> json) =
+      _$NodoModelImpl.fromJson;
 
   @override
   String get id;
@@ -138,7 +190,11 @@ abstract class _NodoModel implements NodoModel {
   String get title;
   @override
   String get description;
+
+  /// Create a copy of NodoModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$_NodoModelCopyWith<_$_NodoModel> get copyWith => throw _privateConstructorUsedError;
+  _$$NodoModelImplCopyWith<_$NodoModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

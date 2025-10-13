@@ -3,7 +3,7 @@ description: A minimal starter Flutter app for Fit Legacy (Firebase + Auth scree
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -13,6 +13,7 @@ dependencies:
   flutter_riverpod: ^2.3.6
   flutter_svg: ^2.0.7
   freezed_annotation: ^2.2.0
+  json_annotation: ^4.9.0
   shared_preferences: ^2.1.1
   google_fonts: ^3.0.1
 

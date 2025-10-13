@@ -14,6 +14,7 @@
         "flutter_svg",
         "freezed_annotation",
         "google_fonts",
+        "json_annotation",
         "shared_preferences"
       ],
       "devDependencies": [
@@ -139,6 +140,13 @@
       ]
     },
     {
+      "name": "json_annotation",
+      "version": "4.9.0",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
       "name": "freezed_annotation",
       "version": "2.4.4",
       "dependencies": [
@@ -252,13 +260,6 @@
       "name": "meta",
       "version": "1.16.0",
       "dependencies": []
-    },
-    {
-      "name": "json_annotation",
-      "version": "4.9.0",
-      "dependencies": [
-        "meta"
-      ]
     },
     {
       "name": "dart_style",
