@@ -56,7 +56,6 @@ gradlew.bat
 
 # Archivos de depuración y logs
 *.log
-*.lock
 
 # Gradle files
 .gradle/
