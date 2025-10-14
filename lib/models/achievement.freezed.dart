@@ -23,8 +23,9 @@ mixin _$Achievement {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  String get date => throw _privateConstructorUsedError; // ISO
-  int get reward => throw _privateConstructorUsedError;
+  String get iconName => throw _privateConstructorUsedError;
+  bool get isUnlocked => throw _privateConstructorUsedError;
+  double get progress => throw _privateConstructorUsedError;
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
   /// Serializes this Achievement to a JSON map.
@@ -47,8 +48,9 @@ abstract class $AchievementCopyWith<$Res> {
       {String id,
       String title,
       String description,
-      String date,
-      int reward,
+      String iconName,
+      bool isUnlocked,
+      double progress,
       Map<String, dynamic>? metadata});
 }
 
@@ -70,8 +72,9 @@ class _$AchievementCopyWithImpl<$Res, $Val extends Achievement>
     Object? id = null,
     Object? title = null,
     Object? description = null,
-    Object? date = null,
-    Object? reward = null,
+    Object? iconName = null,
+    Object? isUnlocked = null,
+    Object? progress = null,
     Object? metadata = freezed,
   }) {
     return _then(_value.copyWith(
@@ -87,14 +90,18 @@ class _$AchievementCopyWithImpl<$Res, $Val extends Achievement>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
+      iconName: null == iconName
+          ? _value.iconName
+          : iconName // ignore: cast_nullable_to_non_nullable
               as String,
-      reward: null == reward
-          ? _value.reward
-          : reward // ignore: cast_nullable_to_non_nullable
-              as int,
+      isUnlocked: null == isUnlocked
+          ? _value.isUnlocked
+          : isUnlocked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      progress: null == progress
+          ? _value.progress
+          : progress // ignore: cast_nullable_to_non_nullable
+              as double,
       metadata: freezed == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -115,8 +122,9 @@ abstract class _$$AchievementImplCopyWith<$Res>
       {String id,
       String title,
       String description,
-      String date,
-      int reward,
+      String iconName,
+      bool isUnlocked,
+      double progress,
       Map<String, dynamic>? metadata});
 }
 
@@ -136,8 +144,9 @@ class __$$AchievementImplCopyWithImpl<$Res>
     Object? id = null,
     Object? title = null,
     Object? description = null,
-    Object? date = null,
-    Object? reward = null,
+    Object? iconName = null,
+    Object? isUnlocked = null,
+    Object? progress = null,
     Object? metadata = freezed,
   }) {
     return _then(_$AchievementImpl(
@@ -153,14 +162,18 @@ class __$$AchievementImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
+      iconName: null == iconName
+          ? _value.iconName
+          : iconName // ignore: cast_nullable_to_non_nullable
               as String,
-      reward: null == reward
-          ? _value.reward
-          : reward // ignore: cast_nullable_to_non_nullable
-              as int,
+      isUnlocked: null == isUnlocked
+          ? _value.isUnlocked
+          : isUnlocked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      progress: null == progress
+          ? _value.progress
+          : progress // ignore: cast_nullable_to_non_nullable
+              as double,
       metadata: freezed == metadata
           ? _value._metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -176,8 +189,9 @@ class _$AchievementImpl implements _Achievement {
       {required this.id,
       required this.title,
       required this.description,
-      required this.date,
-      required this.reward,
+      required this.iconName,
+      this.isUnlocked = false,
+      this.progress = 0.0,
       final Map<String, dynamic>? metadata})
       : _metadata = metadata;
 
@@ -191,10 +205,13 @@ class _$AchievementImpl implements _Achievement {
   @override
   final String description;
   @override
-  final String date;
-// ISO
+  final String iconName;
   @override
-  final int reward;
+  @JsonKey()
+  final bool isUnlocked;
+  @override
+  @JsonKey()
+  final double progress;
   final Map<String, dynamic>? _metadata;
   @override
   Map<String, dynamic>? get metadata {
@@ -207,7 +224,7 @@ class _$AchievementImpl implements _Achievement {
 
   @override
   String toString() {
-    return 'Achievement(id: $id, title: $title, description: $description, date: $date, reward: $reward, metadata: $metadata)';
+    return 'Achievement(id: $id, title: $title, description: $description, iconName: $iconName, isUnlocked: $isUnlocked, progress: $progress, metadata: $metadata)';
   }
 
   @override
@@ -219,15 +236,19 @@ class _$AchievementImpl implements _Achievement {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.date, date) || other.date == date) &&
-            (identical(other.reward, reward) || other.reward == reward) &&
+            (identical(other.iconName, iconName) ||
+                other.iconName == iconName) &&
+            (identical(other.isUnlocked, isUnlocked) ||
+                other.isUnlocked == isUnlocked) &&
+            (identical(other.progress, progress) ||
+                other.progress == progress) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description, date,
-      reward, const DeepCollectionEquality().hash(_metadata));
+  int get hashCode => Object.hash(runtimeType, id, title, description, iconName,
+      isUnlocked, progress, const DeepCollectionEquality().hash(_metadata));
 
   /// Create a copy of Achievement
   /// with the given fields replaced by the non-null parameter values.
@@ -250,8 +271,9 @@ abstract class _Achievement implements Achievement {
       {required final String id,
       required final String title,
       required final String description,
-      required final String date,
-      required final int reward,
+      required final String iconName,
+      final bool isUnlocked,
+      final double progress,
       final Map<String, dynamic>? metadata}) = _$AchievementImpl;
 
   factory _Achievement.fromJson(Map<String, dynamic> json) =
@@ -264,9 +286,11 @@ abstract class _Achievement implements Achievement {
   @override
   String get description;
   @override
-  String get date; // ISO
+  String get iconName;
   @override
-  int get reward;
+  bool get isUnlocked;
+  @override
+  double get progress;
   @override
   Map<String, dynamic>? get metadata;
 

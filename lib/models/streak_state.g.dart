@@ -8,20 +8,18 @@ part of 'streak_state.dart';
 
 _$StreakStateImpl _$$StreakStateImplFromJson(Map<String, dynamic> json) =>
     _$StreakStateImpl(
-      streakId: json['streakId'] as String,
-      type: json['type'] as String,
-      length: (json['length'] as num).toInt(),
-      lastUpdated: json['lastUpdated'] as String?,
+      current: (json['current'] as num).toInt(),
       best: (json['best'] as num).toInt(),
-      active: json['active'] as bool,
+      isActive: json['isActive'] as bool? ?? true,
+      startDate: DateTime.parse(json['startDate'] as String),
+      lastUpdated: DateTime.parse(json['lastUpdated'] as String),
     );
 
 Map<String, dynamic> _$$StreakStateImplToJson(_$StreakStateImpl instance) =>
     <String, dynamic>{
-      'streakId': instance.streakId,
-      'type': instance.type,
-      'length': instance.length,
-      'lastUpdated': instance.lastUpdated,
+      'current': instance.current,
       'best': instance.best,
-      'active': instance.active,
+      'isActive': instance.isActive,
+      'startDate': instance.startDate.toIso8601String(),
+      'lastUpdated': instance.lastUpdated.toIso8601String(),
     };

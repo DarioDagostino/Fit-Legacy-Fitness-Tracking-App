@@ -21,8 +21,9 @@ NodoModel _$NodoModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$NodoModel {
   String get id => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  bool get isCompleted => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get data => throw _privateConstructorUsedError;
 
   /// Serializes this NodoModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $NodoModelCopyWith<$Res> {
   factory $NodoModelCopyWith(NodoModel value, $Res Function(NodoModel) then) =
       _$NodoModelCopyWithImpl<$Res, NodoModel>;
   @useResult
-  $Res call({String id, String title, String description});
+  $Res call(
+      {String id, String name, bool isCompleted, Map<String, dynamic>? data});
 }
 
 /// @nodoc
@@ -58,22 +60,27 @@ class _$NodoModelCopyWithImpl<$Res, $Val extends NodoModel>
   @override
   $Res call({
     Object? id = null,
-    Object? title = null,
-    Object? description = null,
+    Object? name = null,
+    Object? isCompleted = null,
+    Object? data = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      data: freezed == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ) as $Val);
   }
 }
@@ -86,7 +93,8 @@ abstract class _$$NodoModelImplCopyWith<$Res>
       __$$NodoModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String title, String description});
+  $Res call(
+      {String id, String name, bool isCompleted, Map<String, dynamic>? data});
 }
 
 /// @nodoc
@@ -103,22 +111,27 @@ class __$$NodoModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? title = null,
-    Object? description = null,
+    Object? name = null,
+    Object? isCompleted = null,
+    Object? data = freezed,
   }) {
     return _then(_$NodoModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      data: freezed == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ));
   }
 }
@@ -127,7 +140,11 @@ class __$$NodoModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NodoModelImpl implements _NodoModel {
   const _$NodoModelImpl(
-      {required this.id, required this.title, required this.description});
+      {required this.id,
+      required this.name,
+      required this.isCompleted,
+      final Map<String, dynamic>? data})
+      : _data = data;
 
   factory _$NodoModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$NodoModelImplFromJson(json);
@@ -135,13 +152,22 @@ class _$NodoModelImpl implements _NodoModel {
   @override
   final String id;
   @override
-  final String title;
+  final String name;
   @override
-  final String description;
+  final bool isCompleted;
+  final Map<String, dynamic>? _data;
+  @override
+  Map<String, dynamic>? get data {
+    final value = _data;
+    if (value == null) return null;
+    if (_data is EqualUnmodifiableMapView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'NodoModel(id: $id, title: $title, description: $description)';
+    return 'NodoModel(id: $id, name: $name, isCompleted: $isCompleted, data: $data)';
   }
 
   @override
@@ -150,14 +176,16 @@ class _$NodoModelImpl implements _NodoModel {
         (other.runtimeType == runtimeType &&
             other is _$NodoModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.description, description) ||
-                other.description == description));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.isCompleted, isCompleted) ||
+                other.isCompleted == isCompleted) &&
+            const DeepCollectionEquality().equals(other._data, _data));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description);
+  int get hashCode => Object.hash(runtimeType, id, name, isCompleted,
+      const DeepCollectionEquality().hash(_data));
 
   /// Create a copy of NodoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -178,8 +206,9 @@ class _$NodoModelImpl implements _NodoModel {
 abstract class _NodoModel implements NodoModel {
   const factory _NodoModel(
       {required final String id,
-      required final String title,
-      required final String description}) = _$NodoModelImpl;
+      required final String name,
+      required final bool isCompleted,
+      final Map<String, dynamic>? data}) = _$NodoModelImpl;
 
   factory _NodoModel.fromJson(Map<String, dynamic> json) =
       _$NodoModelImpl.fromJson;
@@ -187,9 +216,11 @@ abstract class _NodoModel implements NodoModel {
   @override
   String get id;
   @override
-  String get title;
+  String get name;
   @override
-  String get description;
+  bool get isCompleted;
+  @override
+  Map<String, dynamic>? get data;
 
   /// Create a copy of NodoModel
   /// with the given fields replaced by the non-null parameter values.

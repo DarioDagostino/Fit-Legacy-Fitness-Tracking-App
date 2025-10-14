@@ -11,8 +11,9 @@ _$AchievementImpl _$$AchievementImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      date: json['date'] as String,
-      reward: (json['reward'] as num).toInt(),
+      iconName: json['iconName'] as String,
+      isUnlocked: json['isUnlocked'] as bool? ?? false,
+      progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
       metadata: json['metadata'] as Map<String, dynamic>?,
     );
 
@@ -21,7 +22,8 @@ Map<String, dynamic> _$$AchievementImplToJson(_$AchievementImpl instance) =>
       'id': instance.id,
       'title': instance.title,
       'description': instance.description,
-      'date': instance.date,
-      'reward': instance.reward,
+      'iconName': instance.iconName,
+      'isUnlocked': instance.isUnlocked,
+      'progress': instance.progress,
       'metadata': instance.metadata,
     };

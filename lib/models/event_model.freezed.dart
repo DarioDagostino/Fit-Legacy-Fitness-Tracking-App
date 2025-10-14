@@ -22,10 +22,10 @@ EventModel _$EventModelFromJson(Map<String, dynamic> json) {
 mixin _$EventModel {
   String get id => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  String get source => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
-  Map<String, dynamic> get meta => throw _privateConstructorUsedError;
+  Map<String, dynamic> get data => throw _privateConstructorUsedError;
   String? get userId => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
   /// Serializes this EventModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,10 +46,10 @@ abstract class $EventModelCopyWith<$Res> {
   $Res call(
       {String id,
       String type,
-      String source,
       DateTime timestamp,
-      Map<String, dynamic> meta,
-      String? userId});
+      Map<String, dynamic> data,
+      String? userId,
+      Map<String, dynamic>? metadata});
 }
 
 /// @nodoc
@@ -69,10 +69,10 @@ class _$EventModelCopyWithImpl<$Res, $Val extends EventModel>
   $Res call({
     Object? id = null,
     Object? type = null,
-    Object? source = null,
     Object? timestamp = null,
-    Object? meta = null,
+    Object? data = null,
     Object? userId = freezed,
+    Object? metadata = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -83,22 +83,22 @@ class _$EventModelCopyWithImpl<$Res, $Val extends EventModel>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      source: null == source
-          ? _value.source
-          : source // ignore: cast_nullable_to_non_nullable
-              as String,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      meta: null == meta
-          ? _value.meta
-          : meta // ignore: cast_nullable_to_non_nullable
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
       userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String?,
+      metadata: freezed == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ) as $Val);
   }
 }
@@ -114,10 +114,10 @@ abstract class _$$EventModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String type,
-      String source,
       DateTime timestamp,
-      Map<String, dynamic> meta,
-      String? userId});
+      Map<String, dynamic> data,
+      String? userId,
+      Map<String, dynamic>? metadata});
 }
 
 /// @nodoc
@@ -135,10 +135,10 @@ class __$$EventModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? type = null,
-    Object? source = null,
     Object? timestamp = null,
-    Object? meta = null,
+    Object? data = null,
     Object? userId = freezed,
+    Object? metadata = freezed,
   }) {
     return _then(_$EventModelImpl(
       id: null == id
@@ -149,22 +149,22 @@ class __$$EventModelImplCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      source: null == source
-          ? _value.source
-          : source // ignore: cast_nullable_to_non_nullable
-              as String,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      meta: null == meta
-          ? _value._meta
-          : meta // ignore: cast_nullable_to_non_nullable
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
       userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String?,
+      metadata: freezed == metadata
+          ? _value._metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ));
   }
 }
@@ -175,11 +175,12 @@ class _$EventModelImpl implements _EventModel {
   const _$EventModelImpl(
       {required this.id,
       required this.type,
-      required this.source,
       required this.timestamp,
-      required final Map<String, dynamic> meta,
-      this.userId})
-      : _meta = meta;
+      required final Map<String, dynamic> data,
+      this.userId,
+      final Map<String, dynamic>? metadata})
+      : _data = data,
+        _metadata = metadata;
 
   factory _$EventModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$EventModelImplFromJson(json);
@@ -189,23 +190,30 @@ class _$EventModelImpl implements _EventModel {
   @override
   final String type;
   @override
-  final String source;
-  @override
   final DateTime timestamp;
-  final Map<String, dynamic> _meta;
+  final Map<String, dynamic> _data;
   @override
-  Map<String, dynamic> get meta {
-    if (_meta is EqualUnmodifiableMapView) return _meta;
+  Map<String, dynamic> get data {
+    if (_data is EqualUnmodifiableMapView) return _data;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_meta);
+    return EqualUnmodifiableMapView(_data);
   }
 
   @override
   final String? userId;
+  final Map<String, dynamic>? _metadata;
+  @override
+  Map<String, dynamic>? get metadata {
+    final value = _metadata;
+    if (value == null) return null;
+    if (_metadata is EqualUnmodifiableMapView) return _metadata;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'EventModel(id: $id, type: $type, source: $source, timestamp: $timestamp, meta: $meta, userId: $userId)';
+    return 'EventModel(id: $id, type: $type, timestamp: $timestamp, data: $data, userId: $userId, metadata: $metadata)';
   }
 
   @override
@@ -215,17 +223,23 @@ class _$EventModelImpl implements _EventModel {
             other is _$EventModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.source, source) || other.source == source) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
-            const DeepCollectionEquality().equals(other._meta, _meta) &&
-            (identical(other.userId, userId) || other.userId == userId));
+            const DeepCollectionEquality().equals(other._data, _data) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, type, source, timestamp,
-      const DeepCollectionEquality().hash(_meta), userId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      type,
+      timestamp,
+      const DeepCollectionEquality().hash(_data),
+      userId,
+      const DeepCollectionEquality().hash(_metadata));
 
   /// Create a copy of EventModel
   /// with the given fields replaced by the non-null parameter values.
@@ -247,10 +261,10 @@ abstract class _EventModel implements EventModel {
   const factory _EventModel(
       {required final String id,
       required final String type,
-      required final String source,
       required final DateTime timestamp,
-      required final Map<String, dynamic> meta,
-      final String? userId}) = _$EventModelImpl;
+      required final Map<String, dynamic> data,
+      final String? userId,
+      final Map<String, dynamic>? metadata}) = _$EventModelImpl;
 
   factory _EventModel.fromJson(Map<String, dynamic> json) =
       _$EventModelImpl.fromJson;
@@ -260,13 +274,13 @@ abstract class _EventModel implements EventModel {
   @override
   String get type;
   @override
-  String get source;
-  @override
   DateTime get timestamp;
   @override
-  Map<String, dynamic> get meta;
+  Map<String, dynamic> get data;
   @override
   String? get userId;
+  @override
+  Map<String, dynamic>? get metadata;
 
   /// Create a copy of EventModel
   /// with the given fields replaced by the non-null parameter values.

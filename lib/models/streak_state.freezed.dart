@@ -20,13 +20,11 @@ StreakState _$StreakStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$StreakState {
-  String get streakId => throw _privateConstructorUsedError;
-  String get type =>
-      throw _privateConstructorUsedError; // 'daily' | 'weekly' | 'habit'
-  int get length => throw _privateConstructorUsedError;
-  String? get lastUpdated => throw _privateConstructorUsedError; // ISO
+  int get current => throw _privateConstructorUsedError;
   int get best => throw _privateConstructorUsedError;
-  bool get active => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
+  DateTime get startDate => throw _privateConstructorUsedError;
+  DateTime get lastUpdated => throw _privateConstructorUsedError;
 
   /// Serializes this StreakState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,12 +43,11 @@ abstract class $StreakStateCopyWith<$Res> {
       _$StreakStateCopyWithImpl<$Res, StreakState>;
   @useResult
   $Res call(
-      {String streakId,
-      String type,
-      int length,
-      String? lastUpdated,
+      {int current,
       int best,
-      bool active});
+      bool isActive,
+      DateTime startDate,
+      DateTime lastUpdated});
 }
 
 /// @nodoc
@@ -68,38 +65,33 @@ class _$StreakStateCopyWithImpl<$Res, $Val extends StreakState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? streakId = null,
-    Object? type = null,
-    Object? length = null,
-    Object? lastUpdated = freezed,
+    Object? current = null,
     Object? best = null,
-    Object? active = null,
+    Object? isActive = null,
+    Object? startDate = null,
+    Object? lastUpdated = null,
   }) {
     return _then(_value.copyWith(
-      streakId: null == streakId
-          ? _value.streakId
-          : streakId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      length: null == length
-          ? _value.length
-          : length // ignore: cast_nullable_to_non_nullable
+      current: null == current
+          ? _value.current
+          : current // ignore: cast_nullable_to_non_nullable
               as int,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as String?,
       best: null == best
           ? _value.best
           : best // ignore: cast_nullable_to_non_nullable
               as int,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
+      isActive: null == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      lastUpdated: null == lastUpdated
+          ? _value.lastUpdated
+          : lastUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -113,12 +105,11 @@ abstract class _$$StreakStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String streakId,
-      String type,
-      int length,
-      String? lastUpdated,
+      {int current,
       int best,
-      bool active});
+      bool isActive,
+      DateTime startDate,
+      DateTime lastUpdated});
 }
 
 /// @nodoc
@@ -134,38 +125,33 @@ class __$$StreakStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? streakId = null,
-    Object? type = null,
-    Object? length = null,
-    Object? lastUpdated = freezed,
+    Object? current = null,
     Object? best = null,
-    Object? active = null,
+    Object? isActive = null,
+    Object? startDate = null,
+    Object? lastUpdated = null,
   }) {
     return _then(_$StreakStateImpl(
-      streakId: null == streakId
-          ? _value.streakId
-          : streakId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      length: null == length
-          ? _value.length
-          : length // ignore: cast_nullable_to_non_nullable
+      current: null == current
+          ? _value.current
+          : current // ignore: cast_nullable_to_non_nullable
               as int,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as String?,
       best: null == best
           ? _value.best
           : best // ignore: cast_nullable_to_non_nullable
               as int,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
+      isActive: null == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      lastUpdated: null == lastUpdated
+          ? _value.lastUpdated
+          : lastUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -174,34 +160,30 @@ class __$$StreakStateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$StreakStateImpl implements _StreakState {
   const _$StreakStateImpl(
-      {required this.streakId,
-      required this.type,
-      required this.length,
-      this.lastUpdated,
+      {required this.current,
       required this.best,
-      required this.active});
+      this.isActive = true,
+      required this.startDate,
+      required this.lastUpdated});
 
   factory _$StreakStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$StreakStateImplFromJson(json);
 
   @override
-  final String streakId;
-  @override
-  final String type;
-// 'daily' | 'weekly' | 'habit'
-  @override
-  final int length;
-  @override
-  final String? lastUpdated;
-// ISO
+  final int current;
   @override
   final int best;
   @override
-  final bool active;
+  @JsonKey()
+  final bool isActive;
+  @override
+  final DateTime startDate;
+  @override
+  final DateTime lastUpdated;
 
   @override
   String toString() {
-    return 'StreakState(streakId: $streakId, type: $type, length: $length, lastUpdated: $lastUpdated, best: $best, active: $active)';
+    return 'StreakState(current: $current, best: $best, isActive: $isActive, startDate: $startDate, lastUpdated: $lastUpdated)';
   }
 
   @override
@@ -209,20 +191,20 @@ class _$StreakStateImpl implements _StreakState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$StreakStateImpl &&
-            (identical(other.streakId, streakId) ||
-                other.streakId == streakId) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.length, length) || other.length == length) &&
-            (identical(other.lastUpdated, lastUpdated) ||
-                other.lastUpdated == lastUpdated) &&
+            (identical(other.current, current) || other.current == current) &&
             (identical(other.best, best) || other.best == best) &&
-            (identical(other.active, active) || other.active == active));
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.lastUpdated, lastUpdated) ||
+                other.lastUpdated == lastUpdated));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, streakId, type, length, lastUpdated, best, active);
+  int get hashCode =>
+      Object.hash(runtimeType, current, best, isActive, startDate, lastUpdated);
 
   /// Create a copy of StreakState
   /// with the given fields replaced by the non-null parameter values.
@@ -242,28 +224,25 @@ class _$StreakStateImpl implements _StreakState {
 
 abstract class _StreakState implements StreakState {
   const factory _StreakState(
-      {required final String streakId,
-      required final String type,
-      required final int length,
-      final String? lastUpdated,
+      {required final int current,
       required final int best,
-      required final bool active}) = _$StreakStateImpl;
+      final bool isActive,
+      required final DateTime startDate,
+      required final DateTime lastUpdated}) = _$StreakStateImpl;
 
   factory _StreakState.fromJson(Map<String, dynamic> json) =
       _$StreakStateImpl.fromJson;
 
   @override
-  String get streakId;
-  @override
-  String get type; // 'daily' | 'weekly' | 'habit'
-  @override
-  int get length;
-  @override
-  String? get lastUpdated; // ISO
+  int get current;
   @override
   int get best;
   @override
-  bool get active;
+  bool get isActive;
+  @override
+  DateTime get startDate;
+  @override
+  DateTime get lastUpdated;
 
   /// Create a copy of StreakState
   /// with the given fields replaced by the non-null parameter values.
