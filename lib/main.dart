@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_colors.dart';
-import 'screens/home_screen.dart';
+import 'widgets/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   
   // Set preferred orientations for pixel-perfect design
   await SystemChrome.setPreferredOrientations([
@@ -52,12 +58,12 @@ class FitLegacyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
-          home: const HomeScreen(),
+          home: const AuthWrapper(),
           builder: (context, widget) {
             // Ensure pixel-perfect text scaling
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(
-                textScaleFactor: 1.0.sp,
+                textScaler: TextScaler.linear(1.0.sp),
               ),
               child: widget!,
             );

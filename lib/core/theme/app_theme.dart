@@ -18,12 +18,10 @@ class AppTheme {
         primary: AppColors.primary,
         primaryContainer: AppColors.primaryLight,
         secondary: AppColors.primaryAccent,
-        background: AppColors.background,
         surface: AppColors.surface,
         error: AppColors.error,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: AppColors.textPrimary,
         onSurface: AppColors.textPrimary,
         onError: Colors.white,
       ),
@@ -197,12 +195,10 @@ class AppTheme {
         primary: AppColors.primary,
         primaryContainer: AppColors.primaryDark,
         secondary: AppColors.primaryAccent,
-        background: AppColors.backgroundDark,
         surface: AppColors.surfaceDark,
         error: AppColors.error,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: AppColors.textOnDark,
         onSurface: AppColors.textOnDark,
         onError: Colors.white,
       ),
@@ -222,7 +218,7 @@ class AppTheme {
         labelSmall: AppTextStyles.buttonSmall,
       ),
 
-      appBarTheme: lightTheme.appBarTheme!.copyWith(
+      appBarTheme: lightTheme.appBarTheme.copyWith(
         backgroundColor: AppColors.backgroundDark,
         foregroundColor: AppColors.textOnDark,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -232,11 +228,11 @@ class AppTheme {
         ),
       ),
 
-      cardTheme: lightTheme.cardTheme!.copyWith(
+      cardTheme: lightTheme.cardTheme.copyWith(
         color: AppColors.cardDark,
       ),
 
-      bottomNavigationBarTheme: lightTheme.bottomNavigationBarTheme!.copyWith(
+      bottomNavigationBarTheme: lightTheme.bottomNavigationBarTheme.copyWith(
         backgroundColor: AppColors.surfaceDark,
         unselectedItemColor: AppColors.textOnDark.withOpacity(0.6),
       ),

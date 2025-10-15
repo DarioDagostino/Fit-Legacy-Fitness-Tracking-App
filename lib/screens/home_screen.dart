@@ -11,7 +11,6 @@ import '../widgets/legacito_widget.dart';
 import '../widgets/streak_widgets.dart';
 import '../providers/legacito_provider.dart';
 import '../providers/pedometer_provider.dart';
-import '../providers/streak_provider.dart';
 import 'trivia_menu_screen.dart';
 import 'step_tracking_screen.dart';
 import 'chat_legacito_screen.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../core/constants/app_colors.dart';
 import '../models/legacito_state.dart';
 
 class LegacitoCustomWidget extends StatelessWidget {

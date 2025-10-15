@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'legacito_provider.dart';
 
 // Provider para el estado del pedometer
 final pedometerProvider = StateNotifierProvider<PedometerNotifier, PedometerState>((ref) {
