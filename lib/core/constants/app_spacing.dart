@@ -57,4 +57,7 @@ class AppSpacing {
   // Additional aliases for component compatibility
   static double get radiusCard => radiusMedium;
   static double get marginXs => xs;
+  static double get marginSm => sm;
+  static double get paddingSm => sm;
+  static double get paddingXs => xs;
 }

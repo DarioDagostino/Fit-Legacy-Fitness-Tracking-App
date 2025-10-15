@@ -45,5 +45,26 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- Permisos para el pedometer -->
+	<key>NSMotionUsageDescription</key>
+	<string>Esta aplicación necesita acceso al sensor de movimiento para contar tus pasos y ayudarte a alcanzar tus metas de fitness.</string>
+	
+	<!-- Permisos para notificaciones -->
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Te enviaremos recordatorios motivacionales y actualizaciones sobre tu progreso.</string>
+	
+	<!-- Configuración de orientación -->
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	
+	<!-- Configuración de fondo -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>background-processing</string>
+		<string>background-fetch</string>
+	</array>
 </dict>
 </plist>

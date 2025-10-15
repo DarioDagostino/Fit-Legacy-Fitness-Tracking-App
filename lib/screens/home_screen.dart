@@ -1,31 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants/app_colors.dart';
 import '../core/constants/app_text_styles.dart';
 import '../core/constants/app_spacing.dart';
 import '../widgets/pixel_perfect_widgets.dart';
 import '../widgets/fitness_widgets.dart';
+import '../widgets/legacito_widget.dart';
+import '../widgets/streak_widgets.dart';
+import '../providers/legacito_provider.dart';
+import '../providers/pedometer_provider.dart';
+import '../providers/streak_provider.dart';
 import 'trivia_menu_screen.dart';
 import 'step_tracking_screen.dart';
+import 'chat_legacito_screen.dart';
+import 'streak_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final int currentSteps = 8247;
-  final int stepGoal = 10000;
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final double caloriesBurned = 342.5;
   final double distanceKm = 6.2;
   final int activeMinutes = 45;
 
   @override
   Widget build(BuildContext context) {
-    final stepProgress = currentSteps / stepGoal;
+    final todaySteps = ref.watch(todayStepsProvider);
+    final legacitoState = ref.watch(legacitoProvider);
+    final stepProgress = todaySteps / legacitoState.dailyGoal;
+    
+    // Actualizar pasos en Legacito
+    ref.read(legacitoProvider.notifier).updateSteps(todaySteps);
     
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -39,13 +50,23 @@ class _HomeScreenState extends State<HomeScreen> {
             
             AppGap.custom(AppSpacing.marginSection),
             
+            // Legacito section
+            _buildLegacitoSection(),
+            
+            AppGap.custom(AppSpacing.marginSection),
+            
             // Step counter
-            _buildStepCounterSection(stepProgress),
+            _buildStepCounterSection(stepProgress, todaySteps),
             
             AppGap.custom(AppSpacing.marginSection),
             
             // Metrics grid
             _buildMetricsGrid(),
+            
+            AppGap.custom(AppSpacing.marginSection),
+            
+            // Streak section
+            _buildStreakSection(),
             
             AppGap.custom(AppSpacing.marginSection),
             
@@ -131,7 +152,54 @@ class _HomeScreenState extends State<HomeScreen> {
       .slideY(begin: -0.1, duration: 600.ms);
   }
 
-  Widget _buildStepCounterSection(double progress) {
+  Widget _buildLegacitoSection() {
+    return AppContainer(
+      padding: EdgeInsets.all(AppSpacing.paddingCard),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Tu Compañero de Entrenamiento',
+                style: AppTextStyles.h5.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChatLegacitoScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(AppSpacing.paddingSm),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusCircular),
+                  ),
+                  child: Icon(
+                    Icons.chat_bubble_outline,
+                    size: AppSpacing.iconMedium,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          AppGap.custom(AppSpacing.md),
+          const LegacitoCenterWidget(),
+        ],
+      ),
+    ).animate()
+      .fadeIn(delay: 400.ms, duration: 600.ms)
+      .slideY(begin: 0.2, end: 0);
+  }
+
+  Widget _buildStepCounterSection(double progress, int currentSteps) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -143,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: StepCounter(
         steps: currentSteps,
-        goal: stepGoal,
+        goal: ref.read(legacitoProvider).dailyGoal,
         progress: progress,
       ),
     );
@@ -194,12 +262,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildStreakSection() {
+    return StreakCard(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const StreakScreen(),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildAchievementsSection() {
+    final todaySteps = ref.watch(todayStepsProvider);
+    final legacitoState = ref.watch(legacitoProvider);
+    final stepProgress = todaySteps / legacitoState.dailyGoal;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Today\'s Achievements',
+          'Logros de Hoy',
           style: AppTextStyles.h5.copyWith(
             fontWeight: FontWeight.w700,
           ),
@@ -209,23 +294,30 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             AchievementBadge(
               title: 'Early Bird',
-              description: 'Started your workout before 8 AM',
+              description: 'Comenzaste tu entrenamiento antes de las 8 AM',
               icon: Icons.wb_sunny,
               isUnlocked: true,
             ),
             AppGap.custom(AppSpacing.marginCard),
             AchievementBadge(
-              title: 'Step Master',
-              description: 'Reach 10,000 steps',
+              title: 'Maestro de Pasos',
+              description: 'Alcanza ${legacitoState.dailyGoal} pasos',
               icon: Icons.directions_walk,
-              progress: currentSteps / stepGoal,
+              progress: stepProgress,
             ),
             AppGap.custom(AppSpacing.marginCard),
             AchievementBadge(
-              title: 'Calorie Crusher',
-              description: 'Burn 500 calories',
+              title: 'Destructor de Calorías',
+              description: 'Quema 500 calorías',
               icon: Icons.local_fire_department,
               progress: caloriesBurned / 500,
+            ),
+            AppGap.custom(AppSpacing.marginCard),
+            AchievementBadge(
+              title: 'Racha Estoica',
+              description: '${legacitoState.streakDays} días consecutivos',
+              icon: Icons.local_fire_department,
+              progress: legacitoState.streakDays / 30, // Meta de 30 días
             ),
           ],
         ),
@@ -259,16 +351,16 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center),
-            label: 'Workouts',
+            icon: Icon(Icons.local_fire_department),
+            label: 'Racha',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.analytics),
-            label: 'Progress',
+            label: 'Progreso',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Perfil',
           ),
         ],
       ),
