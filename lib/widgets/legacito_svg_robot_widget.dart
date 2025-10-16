@@ -18,7 +18,7 @@ class LegacitoSvgRobotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: size.w,
       height: (size * 1.75).h,
       child: Stack(

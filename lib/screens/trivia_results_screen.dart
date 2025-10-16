@@ -319,7 +319,7 @@ class TriviaResultsScreen extends ConsumerWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -419,7 +419,7 @@ class TriviaResultsScreen extends ConsumerWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

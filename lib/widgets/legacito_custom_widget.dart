@@ -17,7 +17,7 @@ class LegacitoCustomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: size.w,
       height: (size * 1.25).h,
       child: Stack(

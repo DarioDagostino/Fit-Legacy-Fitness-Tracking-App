@@ -30,7 +30,7 @@ class AppGap extends StatelessWidget {
   const AppGap.horizontalXxxl() : this._(48, isHorizontal: true);
 
   // Custom size gap
-  const AppGap.custom(this.size, {this.isHorizontal = false});
+  const AppGap.custom(this.size, {super.key, this.isHorizontal = false});
 
   @override
   Widget build(BuildContext context) {

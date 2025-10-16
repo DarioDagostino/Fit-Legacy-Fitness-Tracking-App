@@ -17,7 +17,7 @@ class LegacitoRobotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: size.w,
       height: (size * 1.75).h, // Proporción del SVG original
       child: Stack(
@@ -398,7 +398,7 @@ class LegacitoRobotWidget extends StatelessWidget {
   }
 
   Widget _buildFLLogo() {
-    return Container(
+    return SizedBox(
       width: (size * 0.3).w,
       height: (size * 0.3).w,
       child: CustomPaint(

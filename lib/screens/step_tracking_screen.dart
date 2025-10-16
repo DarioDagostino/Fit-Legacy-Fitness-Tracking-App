@@ -172,7 +172,7 @@ class StepTrackingScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '${state.actuales.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                state.actuales.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},'),
                 style: AppTextStyles.displaySmall.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
