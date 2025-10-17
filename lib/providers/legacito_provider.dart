@@ -1,10 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/legacito_state.dart';
+import 'pedometer_provider.dart';
 
 // Provider para el estado de Legacito
-final legacitoProvider = StateNotifierProvider<LegacitoNotifier, LegacitoState>((ref) {
-  return LegacitoNotifier();
+final legacitoProvider =
+    StateNotifierProvider<LegacitoNotifier, LegacitoState>((ref) {
+  final notifier = LegacitoNotifier(ref);
+
+  // Listener administrado correctamente por Riverpod.
+  // Se cancelará automáticamente cuando el provider sea destruido.
+  ref.listen<int>(
+    todayStepsProvider,
+    (previous, next) => notifier.updateSteps(next),
+  );
+
+  return notifier;
 });
 
 // Provider para los pasos diarios
@@ -13,33 +24,10 @@ final dailyStepsProvider = StateProvider<int>((ref) => 0);
 // Provider para la racha actual
 final streakProvider = StateProvider<int>((ref) => 0);
 
-// Provider para el estado de ánimo basado en los pasos
-final legacitoMoodProvider = Provider<LegacitoMood>((ref) {
-  final steps = ref.watch(dailyStepsProvider);
-  final goal = ref.watch(legacitoProvider.select((state) => state.dailyGoal));
-  final progress = steps / goal;
-  
-  if (progress >= 1.0) return LegacitoMood.celebrando;
-  if (progress >= 0.8) return LegacitoMood.motivado;
-  if (progress >= 0.5) return LegacitoMood.neutral;
-  if (progress >= 0.2) return LegacitoMood.preocupado;
-  return LegacitoMood.preocupado;
-});
-
-// Provider para mensajes personalizados
-final legacitoMessageProvider = Provider<String>((ref) {
-  final mood = ref.watch(legacitoMoodProvider);
-  final state = ref.watch(legacitoProvider);
-  
-  if (state.message.isNotEmpty) {
-    return state.message;
-  }
-  
-  return mood.defaultMessage;
-});
-
 class LegacitoNotifier extends StateNotifier<LegacitoState> {
-  LegacitoNotifier() : super(const LegacitoState()) {
+  final Ref _ref;
+
+  LegacitoNotifier(this._ref) : super(const LegacitoState()) {
     _loadPersistedData();
   }
 
@@ -48,7 +36,7 @@ class LegacitoNotifier extends StateNotifier<LegacitoState> {
     final prefs = await SharedPreferences.getInstance();
     final streak = prefs.getInt('streak_days') ?? 0;
     final goal = prefs.getInt('daily_goal') ?? 10000;
-    
+
     state = state.copyWith(
       streakDays: streak,
       dailyGoal: goal,
@@ -57,13 +45,13 @@ class LegacitoNotifier extends StateNotifier<LegacitoState> {
 
   // Actualizar pasos
   void updateSteps(int steps) {
-    state = state.copyWith(currentStepCount: steps);
-    
     // Calcular nuevo estado de ánimo
     final progress = steps / state.dailyGoal;
-    final newMood = _calculateMoodFromProgress(progress);
-    
+    final newMood = _calculateMoodFromProgress(progress, DateTime.now());
+
+    // Solo actualiza si el mood ha cambiado para evitar rebuilds innecesarios.
     if (newMood != state.mood) {
+      state = state.copyWith(currentStepCount: steps, mood: newMood);
       _changeMood(newMood);
     }
   }
@@ -75,7 +63,7 @@ class LegacitoNotifier extends StateNotifier<LegacitoState> {
       isAnimating: true,
       message: newMood.defaultMessage,
     );
-    
+
     // Detener animación después de 2 segundos
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
@@ -85,12 +73,32 @@ class LegacitoNotifier extends StateNotifier<LegacitoState> {
   }
 
   // Calcular estado de ánimo basado en progreso
-  LegacitoMood _calculateMoodFromProgress(double progress) {
+  LegacitoMood _calculateMoodFromProgress(double progress, DateTime now) {
+    final hour = now.hour;
+
+    // La celebración siempre tiene prioridad.
     if (progress >= 1.0) return LegacitoMood.celebrando;
-    if (progress >= 0.8) return LegacitoMood.motivado;
-    if (progress >= 0.5) return LegacitoMood.neutral;
-    if (progress >= 0.2) return LegacitoMood.preocupado;
-    return LegacitoMood.preocupado;
+
+    // Por la mañana (antes de las 9 AM), Legacito es más tolerante.
+    if (hour < 9) {
+      if (progress > 0.1) return LegacitoMood.motivado; // ¡Ya empezaste!
+      return LegacitoMood.neutral; // Neutral por defecto en la mañana.
+    }
+
+    // Por la noche (después de las 8 PM), Legacito se vuelve más insistente.
+    if (hour >= 20) {
+      if (progress < 0.7) {
+        return LegacitoMood.preocupado; // Anima a completar la meta.
+      }
+      return LegacitoMood.motivado;
+    }
+
+    // Durante el resto del día.
+    if (progress >= 0.6) return LegacitoMood.motivado;
+    if (progress >= 0.2) return LegacitoMood.neutral;
+
+    return LegacitoMood
+        .preocupado; // Solo se preocupa si el progreso es muy bajo durante el día.
   }
 
   // Enviar mensaje personalizado
@@ -105,7 +113,7 @@ class LegacitoNotifier extends StateNotifier<LegacitoState> {
   void updateStreak(int days) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('streak_days', days);
-    
+
     state = state.copyWith(streakDays: days);
   }
 
@@ -113,7 +121,7 @@ class LegacitoNotifier extends StateNotifier<LegacitoState> {
   void updateDailyGoal(int goal) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('daily_goal', goal);
-    
+
     state = state.copyWith(dailyGoal: goal);
   }
 

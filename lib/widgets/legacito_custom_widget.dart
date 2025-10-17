@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/legacito_state.dart';
 
 class LegacitoCustomWidget extends StatelessWidget {
@@ -17,18 +18,17 @@ class LegacitoCustomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = _getMoodConfig();
+
     return SizedBox(
       width: size.w,
       height: (size * 1.25).h,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Aura de fondo
-          _buildAura(),
-          
           // Cuerpo principal
-          _buildBody(),
-          
+          _buildBody(config),
+
           // Efectos especiales
           if (isAnimating) _buildSpecialEffects(),
         ],
@@ -36,135 +36,141 @@ class LegacitoCustomWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAura() {
-    final config = _getMoodConfig();
-    
-    return Container(
-      width: (size * 1.5).w,
-      height: (size * 1.5).h,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            config.auraColor.withValues(alpha: config.auraIntensity),
-            Colors.transparent,
-          ],
-        ),
+  Widget _buildBody(MoodConfig config) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeInOut,
+      transform: Matrix4.translationValues(0, config.bodyY.h, 0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Head
+          _buildHead(config),
+          SizedBox(height: 8.h),
+          // Body and Arms
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              _buildArms(config),
+              _buildTorso(config),
+            ],
+          ),
+          // Base
+          _buildBase(config),
+        ],
       ),
-    ).animate(target: isAnimating ? 1 : 0)
-      .scaleXY(begin: 1.0, end: 1.2, duration: 1000.ms)
-      .then()
-      .scaleXY(begin: 1.2, end: 1.0, duration: 1000.ms);
-  }
-
-  Widget _buildBody() {
-    final config = _getMoodConfig();
-    
-    return Transform.translate(
-      offset: Offset(0, config.bodyY.h),
-      child: Transform.rotate(
-        angle: config.headTilt * 0.0174533, // Convertir a radianes
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Cabeza
-            _buildHead(config),
-            
-            // Cuerpo
-            _buildTorso(config),
-            
-            // Brazos
-            _buildArms(config),
-            
-            // Piernas
-            _buildLegs(config),
-          ],
-        ),
-      ),
-    );
+    )
+        .animate(
+          onPlay: (controller) => controller.repeat(),
+        )
+        .moveY(
+          begin: 0,
+          end: -10.h,
+          duration: 3000.ms,
+          curve: Curves.easeInOut,
+        )
+        .then()
+        .moveY(
+          begin: -10.h,
+          end: 0,
+          duration: 3000.ms,
+          curve: Curves.easeInOut,
+        );
   }
 
   Widget _buildHead(MoodConfig config) {
-    return Container(
-      width: (size * 0.4).w,
-      height: (size * 0.4).w,
-      decoration: BoxDecoration(
-        color: config.skinColor,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8.r,
-            offset: Offset(0, 4.h),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      transformAlignment: Alignment.center,
+      transform: Matrix4.rotationZ(config.headTilt * 0.0174533),
+      child: Container(
+        width: (size * 0.7).w,
+        height: (size * 0.7).w,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF1A1A1A), Colors.black],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-        ],
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Ojos
-          _buildEyes(config),
-          
-          // Boca
-          _buildMouth(config),
-          
-          // Expresión especial
-          _buildSpecialExpression(config),
-        ],
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: config.color,
+            width: 4.w,
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // FL Logo
+            Text(
+              'FL',
+              style: GoogleFonts.oswald(
+                fontSize: (size * 0.3).sp,
+                fontWeight: FontWeight.bold,
+                color: config.color,
+              ),
+            ),
+            // Eyes
+            _buildEyes(config),
+            // Sensor
+            Positioned(
+              top: (size * 0.05).h,
+              right: (size * 0.05).w,
+              child: Container(
+                width: (size * 0.05).w,
+                height: (size * 0.05).w,
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              )
+                  .animate(
+                    onPlay: (controller) => controller.repeat(),
+                  )
+                  .fade(
+                    begin: 0.5,
+                    end: 1.0,
+                    duration: 2000.ms,
+                  )
+                  .then()
+                  .fade(
+                    begin: 1.0,
+                    end: 0.5,
+                    duration: 2000.ms,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildEyes(MoodConfig config) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Ojo izquierdo
-        Container(
-          width: (size * 0.08 * config.eyeSize).w,
-          height: (size * 0.08 * config.eyeSize).w,
-          decoration: BoxDecoration(
-            color: config.eyeColor,
-            shape: BoxShape.circle,
+    return Padding(
+      padding: EdgeInsets.only(bottom: (size * 0.05).h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            width: (size * 0.06 * config.eyeSize).w,
+            height: (size * 0.06 * config.eyeSize).w,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
           ),
-        ),
-        
-        // Ojo derecho
-        Container(
-          width: (size * 0.08 * config.eyeSize).w,
-          height: (size * 0.08 * config.eyeSize).w,
-          decoration: BoxDecoration(
-            color: config.eyeColor,
-            shape: BoxShape.circle,
+          SizedBox(width: (size * 0.2).w),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            width: (size * 0.06 * config.eyeSize).w,
+            height: (size * 0.06 * config.eyeSize).w,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMouth(MoodConfig config) {
-    return Positioned(
-      bottom: (size * 0.15).h,
-      child: Container(
-        width: (size * 0.2).w,
-        height: (size * 0.05).h,
-        decoration: BoxDecoration(
-          color: config.mouthColor,
-          borderRadius: BorderRadius.circular(config.mouthRadius.r),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSpecialExpression(MoodConfig config) {
-    if (config.specialIcon == null) return const SizedBox.shrink();
-    
-    return Positioned(
-      top: (size * 0.1).h,
-      child: Icon(
-        config.specialIcon!,
-        color: config.specialColor,
-        size: (size * 0.15).sp,
+        ],
       ),
     );
   }
@@ -172,84 +178,135 @@ class LegacitoCustomWidget extends StatelessWidget {
   Widget _buildTorso(MoodConfig config) {
     return Container(
       width: (size * 0.6).w,
-      height: (size * 0.4).h,
+      height: (size * 0.5).h,
       decoration: BoxDecoration(
-        color: config.bodyColor,
-        borderRadius: BorderRadius.circular((size * 0.1).r),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFE0E0E0), Color(0xFFBDBDBD)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular((size * 0.15).r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8.r,
-            offset: Offset(0, 4.h),
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 10.r,
+            offset: Offset(0, 5.h),
           ),
         ],
       ),
-      child: Stack(
-        alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Detalles del torso
-          if (config.torsoDetails != null) config.torsoDetails!,
+          Container(
+            width: (size * 0.3).w,
+            height: (size * 0.02).h,
+            decoration: BoxDecoration(
+              color: config.color,
+              borderRadius: BorderRadius.circular(2.r),
+            ),
+          ),
+          Container(
+            width: (size * 0.25).w,
+            height: (size * 0.02).h,
+            decoration: BoxDecoration(
+              color: config.color,
+              borderRadius: BorderRadius.circular(2.r),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildArms(MoodConfig config) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Brazo izquierdo
-        Transform.rotate(
-          angle: config.armRotation * 0.0174533,
-          child: Container(
-            width: (size * 0.15).w,
-            height: (size * 0.3).h,
-            decoration: BoxDecoration(
-              color: config.skinColor,
-              borderRadius: BorderRadius.circular((size * 0.075).r),
+    return Padding(
+      padding: EdgeInsets.only(top: (size * 0.05).h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Left Arm
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            transformAlignment: Alignment.topCenter,
+            transform: Matrix4.rotationZ(config.armRotation * 0.0174533),
+            child: Container(
+              width: (size * 0.2).w,
+              height: (size * 0.3).h,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFE0E0E0), Color(0xFFBDBDBD)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular((size * 0.1).r),
+              ),
             ),
           ),
-        ),
-        
-        SizedBox(width: (size * 0.3).w),
-        
-        // Brazo derecho
-        Transform.rotate(
-          angle: -config.armRotation * 0.0174533,
-          child: Container(
-            width: (size * 0.15).w,
-            height: (size * 0.3).h,
-            decoration: BoxDecoration(
-              color: config.skinColor,
-              borderRadius: BorderRadius.circular((size * 0.075).r),
+          SizedBox(width: (size * 0.3).w),
+          // Right Arm
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            transformAlignment: Alignment.topCenter,
+            transform: Matrix4.rotationZ(-config.armRotation * 0.0174533),
+            child: Container(
+              width: (size * 0.2).w,
+              height: (size * 0.3).h,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFE0E0E0), Color(0xFFBDBDBD)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular((size * 0.1).r),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildLegs(MoodConfig config) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget _buildBase(MoodConfig config) {
+    return Column(
       children: [
-        // Pierna izquierda
+        SizedBox(height: 4.h),
+        // Floating Base
         Container(
-          width: (size * 0.2).w,
+          width: (size * 0.5).w,
           height: (size * 0.3).h,
           decoration: BoxDecoration(
-            color: config.legColor,
-            borderRadius: BorderRadius.circular((size * 0.1).r),
+            gradient: const LinearGradient(
+              colors: [Color(0xFFD9D9D9), Color(0xFFC4C4C4)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius:
+                BorderRadius.all(Radius.elliptical(size * 0.5, size * 0.3)),
+            boxShadow: [
+              BoxShadow(
+                color: config.color.withOpacity(0.4),
+                blurRadius: 20.r,
+                spreadRadius: 5.r,
+              ),
+            ],
           ),
         ),
-        
-        // Pierna derecha
+        SizedBox(height: 8.h),
+        // Shadow
         Container(
-          width: (size * 0.2).w,
-          height: (size * 0.3).h,
+          width: (size * 0.4).w,
+          height: (size * 0.05).h,
           decoration: BoxDecoration(
-            color: config.legColor,
-            borderRadius: BorderRadius.circular((size * 0.1).r),
+            color: Colors.black.withOpacity(0.2),
+            borderRadius:
+                BorderRadius.all(Radius.elliptical(size * 0.4, size * 0.05)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10.r,
+              ),
+            ],
           ),
         ),
       ],
@@ -258,31 +315,28 @@ class LegacitoCustomWidget extends StatelessWidget {
 
   Widget _buildSpecialEffects() {
     final config = _getMoodConfig();
-    
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // Partículas
-        if (config.particles != null) config.particles!,
-        
-        // Efectos de brillo
-        if (config.glowEffect)
-          Container(
-            width: (size * 1.2).w,
-            height: (size * 1.2).h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  config.auraColor.withValues(alpha: 0.3),
-                  Colors.transparent,
-                ],
-              ),
+
+    return IgnorePointer(
+      child: Container(
+        width: size * 1.5,
+        height: size * 1.5,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: config.color.withOpacity(config.auraIntensity),
+              blurRadius: 50.r,
+              spreadRadius: 20.r,
             ),
-          ).animate()
-            .fadeIn(duration: 1000.ms)
-            .scaleXY(begin: 0.8, end: 1.2, duration: 1000.ms),
-      ],
+          ],
+        ),
+      )
+          .animate(target: isAnimating ? 1 : 0)
+          .scaleXY(
+              begin: 1.0, end: 1.2, duration: 1000.ms, curve: Curves.easeInOut)
+          .then()
+          .scaleXY(
+              begin: 1.2, end: 1.0, duration: 1000.ms, curve: Curves.easeInOut),
     );
   }
 
@@ -291,262 +345,110 @@ class LegacitoCustomWidget extends StatelessWidget {
       case LegacitoMood.motivado:
         return MoodConfig(
           name: 'Motivado',
-          color: const Color(0xFFFFD700),
-          auraColor: const Color(0xFFFFD700),
+          color: const Color(0xFFD4AF37), // Gold
           auraIntensity: 0.3,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFF4A90E2),
-          legColor: const Color(0xFF2E5BBA),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFFE74C3C),
-          mouthRadius: 20,
           armRotation: 0,
           headTilt: 0,
           eyeSize: 1.0,
           bodyY: 0,
-          specialIcon: Icons.trending_up,
-          specialColor: const Color(0xFFFFD700),
-          glowEffect: true,
         );
-        
+
       case LegacitoMood.celebrando:
         return MoodConfig(
           name: 'Celebrando',
-          color: const Color(0xFFFF6B35),
-          auraColor: const Color(0xFFFF6B35),
+          color: const Color(0xFFFF6B35), // Orange
           auraIntensity: 0.5,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFFFF6B35),
-          legColor: const Color(0xFFE55A2B),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFFE74C3C),
-          mouthRadius: 30,
           armRotation: -30,
           headTilt: 0,
           eyeSize: 1.2,
           bodyY: -10,
-          specialIcon: Icons.celebration,
-          specialColor: const Color(0xFFFFD700),
-          glowEffect: true,
-          particles: _buildCelebrationParticles(),
         );
-        
+
       case LegacitoMood.neutral:
         return MoodConfig(
           name: 'Neutral',
-          color: const Color(0xFFA0AEC0),
-          auraColor: const Color(0xFFA0AEC0),
+          color: const Color(0xFFA0AEC0), // Gray
           auraIntensity: 0.15,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFF718096),
-          legColor: const Color(0xFF4A5568),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFF718096),
-          mouthRadius: 15,
           armRotation: 5,
           headTilt: 0,
           eyeSize: 1.0,
           bodyY: 0,
-          specialIcon: Icons.remove,
-          specialColor: const Color(0xFFA0AEC0),
-          glowEffect: false,
         );
-        
+
       case LegacitoMood.preocupado:
         return MoodConfig(
           name: 'Preocupado',
-          color: const Color(0xFF718096),
-          auraColor: const Color(0xFF718096),
+          color: const Color(0xFF718096), // Darker Gray
           auraIntensity: 0.2,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFF4A5568),
-          legColor: const Color(0xFF2D3748),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFF4A5568),
-          mouthRadius: 10,
           armRotation: 10,
           headTilt: -5,
           eyeSize: 0.9,
-          bodyY: 5,
-          specialIcon: Icons.warning,
-          specialColor: const Color(0xFFE53E3E),
-          glowEffect: false,
+          bodyY: 10,
         );
-        
+
       case LegacitoMood.resiliente:
         return MoodConfig(
           name: 'Resiliente',
-          color: const Color(0xFF9F7AEA),
-          auraColor: const Color(0xFF9F7AEA),
+          color: const Color(0xFF4299E1), // Blue
           auraIntensity: 0.4,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFF9F7AEA),
-          legColor: const Color(0xFF805AD5),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFF9F7AEA),
-          mouthRadius: 25,
           armRotation: -15,
-          headTilt: 5,
-          eyeSize: 1.1,
+          headTilt: 0,
+          eyeSize: 0.9,
           bodyY: -5,
-          specialIcon: Icons.psychology,
-          specialColor: const Color(0xFF9F7AEA),
-          glowEffect: true,
         );
-        
+
       case LegacitoMood.durmiendo:
         return MoodConfig(
           name: 'Durmiendo',
-          color: const Color(0xFF2B6CB0),
-          auraColor: const Color(0xFF2B6CB0),
+          color: const Color(0xFF6B7280), // Dark Gray
           auraIntensity: 0.1,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFF2B6CB0),
-          legColor: const Color(0xFF1A365D),
-          eyeColor: const Color(0xFF4A5568),
-          mouthColor: const Color(0xFF2B6CB0),
-          mouthRadius: 5,
           armRotation: 0,
-          headTilt: 0,
+          headTilt: -10,
           eyeSize: 0.3,
-          bodyY: 0,
-          specialIcon: Icons.bedtime,
-          specialColor: const Color(0xFF2B6CB0),
-          glowEffect: false,
+          bodyY: 10,
         );
-        
+
       case LegacitoMood.pensativo:
         return MoodConfig(
           name: 'Pensativo',
-          color: const Color(0xFF38B2AC),
-          auraColor: const Color(0xFF38B2AC),
+          color: const Color(0xFF8B7ED8), // Purple
           auraIntensity: 0.25,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFF38B2AC),
-          legColor: const Color(0xFF2C7A7B),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFF38B2AC),
-          mouthRadius: 12,
-          armRotation: 0,
-          headTilt: 10,
-          eyeSize: 0.8,
+          armRotation: -25,
+          headTilt: 5,
+          eyeSize: 0.9,
           bodyY: 0,
-          specialIcon: Icons.psychology_alt,
-          specialColor: const Color(0xFF38B2AC),
-          glowEffect: false,
         );
-        
+
       case LegacitoMood.energico:
         return MoodConfig(
           name: 'Energético',
-          color: const Color(0xFFFFA500),
-          auraColor: const Color(0xFFFFA500),
-          auraIntensity: 0.6,
-          skinColor: const Color(0xFFFFE4B5),
-          bodyColor: const Color(0xFFFFA500),
-          legColor: const Color(0xFFE67E22),
-          eyeColor: const Color(0xFF2E5BBA),
-          mouthColor: const Color(0xFFE74C3C),
-          mouthRadius: 35,
+          color: const Color(0xFFF59E0B), // Amber
+          auraIntensity: 0.45,
           armRotation: -20,
           headTilt: 0,
           eyeSize: 1.3,
           bodyY: -15,
-          specialIcon: Icons.bolt,
-          specialColor: const Color(0xFFFFD700),
-          glowEffect: true,
-          particles: _buildEnergyParticles(),
         );
     }
-  }
-
-  Widget _buildCelebrationParticles() {
-    return Stack(
-      children: List.generate(8, (index) {
-        return Positioned(
-          left: (size * (0.3 + (index * 0.1))).w,
-          top: (size * (0.2 + (index * 0.05))).h,
-          child: Container(
-            width: (size * 0.05).w,
-            height: (size * 0.05).w,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFD700),
-              shape: BoxShape.circle,
-            ),
-          ),
-        ).animate(delay: (index * 100).ms)
-          .fadeIn(duration: 500.ms)
-          .scaleXY(begin: 0.0, end: 1.0, duration: 500.ms)
-          .then()
-          .fadeOut(duration: 1000.ms);
-      }),
-    );
-  }
-
-  Widget _buildEnergyParticles() {
-    return Stack(
-      children: List.generate(6, (index) {
-        return Positioned(
-          left: (size * (0.2 + (index * 0.12))).w,
-          top: (size * (0.1 + (index * 0.08))).h,
-          child: Container(
-            width: (size * 0.03).w,
-            height: (size * 0.03).w,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFD700),
-              shape: BoxShape.circle,
-            ),
-          ),
-        ).animate(delay: (index * 150).ms)
-          .fadeIn(duration: 300.ms)
-          .scaleXY(begin: 0.0, end: 1.0, duration: 300.ms)
-          .then()
-          .fadeOut(duration: 800.ms);
-      }),
-    );
   }
 }
 
 class MoodConfig {
   final String name;
   final Color color;
-  final Color auraColor;
   final double auraIntensity;
-  final Color skinColor;
-  final Color bodyColor;
-  final Color legColor;
-  final Color eyeColor;
-  final Color mouthColor;
-  final double mouthRadius;
   final double armRotation;
   final double headTilt;
   final double eyeSize;
   final double bodyY;
-  final IconData? specialIcon;
-  final Color specialColor;
-  final bool glowEffect;
-  final Widget? particles;
-  final Widget? torsoDetails;
 
   const MoodConfig({
     required this.name,
     required this.color,
-    required this.auraColor,
     required this.auraIntensity,
-    required this.skinColor,
-    required this.bodyColor,
-    required this.legColor,
-    required this.eyeColor,
-    required this.mouthColor,
-    required this.mouthRadius,
     required this.armRotation,
     required this.headTilt,
     required this.eyeSize,
     required this.bodyY,
-    this.specialIcon,
-    required this.specialColor,
-    required this.glowEffect,
-    this.particles,
-    this.torsoDetails,
   });
 }

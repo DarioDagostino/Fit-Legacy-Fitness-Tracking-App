@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/constants/app_colors.dart';
-import '../core/constants/app_text_styles.dart';
-import '../core/constants/app_spacing.dart';
-import '../widgets/pixel_perfect_widgets.dart';
-import '../widgets/fitness_widgets.dart';
-import '../widgets/legacito_widget.dart';
-import '../widgets/streak_widgets.dart';
-import '../providers/legacito_provider.dart';
-import '../providers/pedometer_provider.dart';
-import 'trivia_menu_screen.dart';
-import 'step_tracking_screen.dart';
-import 'chat_legacito_screen.dart';
-import 'streak_screen.dart';
+import 'package:fit_legacy/core/constants/app_colors.dart';
+import 'package:fit_legacy/core/constants/app_text_styles.dart';
+import 'package:fit_legacy/core/constants/app_spacing.dart';
+import 'package:fit_legacy/widgets/pixel_perfect_widgets.dart';
+import 'package:fit_legacy/widgets/fitness_widgets.dart';
+import 'package:fit_legacy/widgets/legacito_widget.dart';
+import 'package:fit_legacy/widgets/streak_widgets.dart';
+import 'package:fit_legacy/providers/legacito_provider.dart';
+import 'package:fit_legacy/providers/pedometer_provider.dart';
+import 'package:fit_legacy/screens/trivia_menu_screen.dart';
+import 'package:fit_legacy/screens/step_tracking_screen.dart';
+import 'package:fit_legacy/screens/chat_legacito_screen.dart';
+import 'package:fit_legacy/screens/streak_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -152,6 +152,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildLegacitoSection() {
+    final legacitoState = ref.watch(legacitoProvider);
     return AppContainer(
       padding: EdgeInsets.all(AppSpacing.paddingCard),
       child: Column(
@@ -177,7 +178,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Container(
                   padding: EdgeInsets.all(AppSpacing.paddingSm),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusCircular),
                   ),
                   child: Icon(
@@ -190,7 +191,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
           AppGap.custom(AppSpacing.md),
-          const LegacitoCenterWidget(),
+          LegacitoCenterWidget(state: legacitoState),
         ],
       ),
     ).animate()
@@ -400,7 +401,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               width: 60.w,
               height: 60.h,
               decoration: BoxDecoration(
-                color: AppColors.secondary.withValues(alpha: 0.1),
+                color: AppColors.secondary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
               ),
               child: Icon(

@@ -202,20 +202,27 @@ class LegacitoSvgRobotWidget extends StatelessWidget {
     switch (mood) {
       case LegacitoMood.motivado:
         return 'assets/images/legacito/legacito_neutral.svg'; // Usar neutral como base
+        return 'assets/images/legacito/legacito_neutral.svg';
       case LegacitoMood.celebrando:
         return 'assets/images/legacito/legacito_video.svg'; // Usar video para celebración
+        return 'assets/images/legacito/legacito_video.svg';
       case LegacitoMood.neutral:
         return 'assets/images/legacito/legacito_neutral.svg';
       case LegacitoMood.preocupado:
         return 'assets/images/legacito/legacito_profile1.svg'; // Perfil para preocupación
+        return 'assets/images/legacito/legacito_profile1.svg';
       case LegacitoMood.resiliente:
         return 'assets/images/legacito/legacito_profile2.svg'; // Perfil 2 para resiliencia
+        return 'assets/images/legacito/legacito_profile2.svg';
       case LegacitoMood.durmiendo:
         return 'assets/images/legacito/legacito_back.svg'; // Espalda para dormir
+        return 'assets/images/legacito/legacito_back.svg';
       case LegacitoMood.pensativo:
         return 'assets/images/legacito/legacito_profile1.svg'; // Perfil para pensativo
+        return 'assets/images/legacito/legacito_profile1.svg';
       case LegacitoMood.energico:
         return 'assets/images/legacito/legacito_complete.svg'; // Completo para energético
+        return 'assets/images/legacito/legacito_complete.svg';
     }
   }
 

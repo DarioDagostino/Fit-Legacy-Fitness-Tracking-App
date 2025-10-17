@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import '../services/firebase_service.dart';
-import '../core/theme/app_colors.dart';
+
+enum AuthMode { login, signup, reset }
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -16,8 +19,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
-  bool _isSignUp = false;
+
+  AuthMode _authMode = AuthMode.login;
   bool _isLoading = false;
   bool _obscurePassword = true;
 
@@ -35,14 +38,20 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     setState(() => _isLoading = true);
 
     final authService = ref.read(authServiceProvider);
-    
+
     try {
-      if (_isSignUp) {
+      if (_authMode == AuthMode.signup) {
         await authService.registerWithEmailAndPassword(
           _emailController.text.trim(),
           _passwordController.text,
           _nameController.text.trim(),
         );
+      } else if (_authMode == AuthMode.reset) {
+        await authService.sendPasswordResetEmail(_emailController.text.trim());
+        // Show success message and switch to login
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Enlace de restablecimiento enviado a tu correo.')));
+        setState(() => _authMode = AuthMode.login);
       } else {
         await authService.signInWithEmailAndPassword(
           _emailController.text.trim(),
@@ -67,10 +76,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   Future<void> _signInAnonymously() async {
     setState(() => _isLoading = true);
-    
+
     final authService = ref.read(authServiceProvider);
     await authService.signInAnonymously();
-    
+
     if (mounted) {
       setState(() => _isLoading = false);
     }
@@ -99,20 +108,21 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 40.h),
-                  
+
                   // Logo and title
                   Container(
                     height: 120.h,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/logos/logo_principal.png'),
+                        image: AssetImage(
+                            'assets/images/logos/logo_principal.png'),
                         fit: BoxFit.contain,
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 20.h),
-                  
+
                   Text(
                     'Fit Legacy',
                     textAlign: TextAlign.center,
@@ -122,9 +132,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       color: Colors.white,
                     ),
                   ),
-                  
+
                   SizedBox(height: 8.h),
-                  
+
                   Text(
                     _isSignUp ? 'Crea tu cuenta' : 'Inicia sesión',
                     textAlign: TextAlign.center,
@@ -133,9 +143,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       color: Colors.grey[400],
                     ),
                   ),
-                  
+
                   SizedBox(height: 40.h),
-                  
+
                   // Name field (only for sign up)
                   if (_isSignUp) ...[
                     _buildTextField(
@@ -150,7 +160,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     ),
                     SizedBox(height: 16.h),
                   ],
-                  
+
                   // Email field
                   _buildTextField(
                     controller: _emailController,
@@ -166,9 +176,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       return null;
                     },
                   ),
-                  
+
                   SizedBox(height: 16.h),
-                  
+
                   // Password field
                   _buildTextField(
                     controller: _passwordController,
@@ -176,7 +186,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     obscureText: _obscurePassword,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: Colors.grey[400],
                       ),
                       onPressed: () {
@@ -193,9 +205,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       return null;
                     },
                   ),
-                  
+
                   SizedBox(height: 32.h),
-                  
+
                   // Auth button
                   ElevatedButton(
                     onPressed: _isLoading ? null : _authenticate,
@@ -225,16 +237,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             ),
                           ),
                   ),
-                  
+
                   SizedBox(height: 16.h),
-                  
+
                   // Switch auth mode
                   TextButton(
-                    onPressed: _isLoading ? null : () {
-                      setState(() => _isSignUp = !_isSignUp);
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            setState(() => _isSignUp = !_isSignUp);
+                          },
                     child: Text(
-                      _isSignUp 
+                      _isSignUp
                           ? '¿Ya tienes cuenta? Inicia sesión'
                           : '¿No tienes cuenta? Regístrate',
                       style: TextStyle(
@@ -243,9 +257,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 20.h),
-                  
+
                   // Divider
                   Row(
                     children: [
@@ -273,9 +287,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       ),
                     ],
                   ),
-                  
+
                   SizedBox(height: 20.h),
-                  
+
                   // Anonymous sign in
                   OutlinedButton(
                     onPressed: _isLoading ? null : _signInAnonymously,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Provider para el estado del pedometer
@@ -57,6 +58,9 @@ class PedometerState {
 class PedometerNotifier extends StateNotifier<PedometerState> {
   StreamSubscription<StepCount>? _stepCountSubscription;
   StreamSubscription<PedestrianStatus>? _pedestrianStatusSubscription;
+  int _initialSteps = 0;
+  int _dailySteps = 0;
+  late SharedPreferences _prefs;
 
   PedometerNotifier() : super(PedometerState(lastUpdate: DateTime.now())) {
     _initializePedometer();
@@ -72,6 +76,8 @@ class PedometerNotifier extends StateNotifier<PedometerState> {
   // Inicializar el pedometer
   Future<void> _initializePedometer() async {
     try {
+      _prefs = await SharedPreferences.getInstance();
+
       // Verificar permisos
       final permission = await Permission.activityRecognition.request();
       if (!permission.isGranted) {
@@ -81,6 +87,9 @@ class PedometerNotifier extends StateNotifier<PedometerState> {
         );
         return;
       }
+
+      // Cargar pasos guardados
+      await _loadSavedSteps();
 
       // Configurar stream de pasos
       _stepCountSubscription = Pedometer.stepCountStream.listen(
@@ -99,9 +108,6 @@ class PedometerNotifier extends StateNotifier<PedometerState> {
         isConnected: true,
         error: null,
       );
-
-      // Actualizar pasos iniciales
-      await _loadInitialSteps();
     } catch (e) {
       state = state.copyWith(
         error: 'Error al inicializar pedometer: $e',
@@ -111,18 +117,34 @@ class PedometerNotifier extends StateNotifier<PedometerState> {
   }
 
   // Manejar conteo de pasos
-  void _onStepCount(StepCount event) {
-    final todaySteps = event.steps;
+  void _onStepCount(StepCount event) async {
     final now = DateTime.now();
-    
+    final lastSavedDateStr = _prefs.getString('pedometer_date');
+    final todayStr = '${now.year}-${now.month}-${now.day}';
+
+    if (lastSavedDateStr != todayStr) {
+      // Es un nuevo día, reiniciar conteo
+      _dailySteps = 0;
+      _initialSteps = event.steps;
+      await _prefs.setString('pedometer_date', todayStr);
+      await _prefs.setInt('pedometer_initial_steps', _initialSteps);
+    }
+
+    // Si el dispositivo se reinicia, el conteo de `event.steps` será menor
+    if (event.steps < _initialSteps) {
+      _initialSteps = event.steps;
+      await _prefs.setInt('pedometer_initial_steps', _initialSteps);
+    }
+
+    _dailySteps = event.steps - _initialSteps;
+
+    await _prefs.setInt('pedometer_daily_steps', _dailySteps);
+
     state = state.copyWith(
-      todaySteps: todaySteps,
+      todaySteps: _dailySteps,
       lastUpdate: now,
       error: null,
     );
-
-    // Notificar a Legacito sobre el cambio de pasos
-    // Esto se manejará en el provider de Legacito
   }
 
   // Manejar estado del peatón
@@ -141,19 +163,20 @@ class PedometerNotifier extends StateNotifier<PedometerState> {
   }
 
   // Cargar pasos iniciales
-  Future<void> _loadInitialSteps() async {
-    try {
-      // Obtener pasos del día actual
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      
-      // Aquí podrías implementar lógica para obtener pasos del día
-      // Por ahora usamos el stream del pedometer
-    } catch (e) {
-      state = state.copyWith(
-        error: 'Error al cargar pasos iniciales: $e',
-      );
+  Future<void> _loadSavedSteps() async {
+    final now = DateTime.now();
+    final todayStr = '${now.year}-${now.month}-${now.day}';
+    final lastSavedDateStr = _prefs.getString('pedometer_date');
+
+    if (lastSavedDateStr == todayStr) {
+      _initialSteps = _prefs.getInt('pedometer_initial_steps') ?? 0;
+      _dailySteps = _prefs.getInt('pedometer_daily_steps') ?? 0;
+    } else {
+      // Es un nuevo día o la primera vez que se abre la app
+      _initialSteps = 0;
+      _dailySteps = 0;
     }
+    state = state.copyWith(todaySteps: _dailySteps);
   }
 
   // Reiniciar pedometer
