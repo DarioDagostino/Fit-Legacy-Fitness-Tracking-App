@@ -1,22 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/auth_gate.dart';
-import 'package:provider/provider.dart';
+import 'package:myapp/lib/auth_gate.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: const MyApp(),
-    ),
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class ThemeProvider with ChangeNotifier {
@@ -25,8 +18,9 @@ class ThemeProvider with ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   void toggleTheme() {
-    _themeMode =
-        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode = _themeMode == ThemeMode.light
+        ? ThemeMode.dark
+        : ThemeMode.light;
     notifyListeners();
   }
 }
@@ -35,8 +29,7 @@ class AppTheme {
   static const Color primarySeedColor = Colors.deepPurple;
 
   static final TextTheme appTextTheme = TextTheme(
-    displayLarge:
-        GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
+    displayLarge: GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
     titleLarge: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.w500),
     bodyMedium: GoogleFonts.openSans(fontSize: 14),
     labelLarge: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.bold),
@@ -78,23 +71,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
-      return MaterialApp(
-        title: 'Flutter Demo',
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: themeProvider.themeMode,
-        home: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const MyHomePage(title: 'Flutter Demo Home Page');
-            }
-            return const AuthGate();
-          },
-        ),
-      );
-    });
+    return Consumer(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Fit Legacy',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const MyHomePage(title: 'Flutter Demo Home Page');
+              }
+              return const AuthGate();
+            },
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -120,15 +115,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
         actions: [
-          Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
-            return IconButton(
-              icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
-              onPressed: () => themeProvider.toggleTheme(),
-            );
-          }),
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return IconButton(
+                icon: Icon(
+                  themeProvider.themeMode == ThemeMode.dark
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
+                onPressed: () => themeProvider.toggleTheme(),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => FirebaseAuth.instance.signOut(),

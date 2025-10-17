@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_legacy/domain/entities/nodo_entity.dart';
-import 'package:fit_legacy/data/repositories/camino_repository_impl.dart';
-import 'package:fit_legacy/domain/repositories/camino_repository_interface.dart';
 
 class CaminoProvider with ChangeNotifier {
-  final CaminoRepositoryInterface _caminoRepository = CaminoRepositoryImpl();
   List<Nodo> _nodos = [];
   bool _isLoading = true;
+  int _mockLastCompletedId = -1; // Mock progress
 
   List<Nodo> get nodos => _nodos;
   bool get isLoading => _isLoading;
@@ -16,7 +14,7 @@ class CaminoProvider with ChangeNotifier {
     _initializeNodos();
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user != null) {
-        loadProgreso(user.uid);
+        loadProgreso();
       } else {
         _resetProgreso();
       }
@@ -42,21 +40,23 @@ class CaminoProvider with ChangeNotifier {
   }
 
   void _resetProgreso() {
+    _mockLastCompletedId = -1;
     _initializeNodos();
     _nodos.first.status = NodoStatus.active;
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<void> loadProgreso(String userId) async {
+  Future<void> loadProgreso() async {
     _isLoading = true;
     notifyListeners();
 
-    final lastCompletedId = await _caminoRepository.getProgreso(userId);
+    // Simulate a network delay
+    await Future.delayed(const Duration(milliseconds: 500));
     for (var nodo in _nodos) {
-      if (nodo.id <= lastCompletedId) {
+      if (nodo.id <= _mockLastCompletedId) {
         nodo.status = NodoStatus.completed;
-      } else if (nodo.id == lastCompletedId + 1) {
+      } else if (nodo.id == _mockLastCompletedId + 1) {
         nodo.status = NodoStatus.active;
       } else {
         nodo.status = NodoStatus.locked;
@@ -70,8 +70,20 @@ class CaminoProvider with ChangeNotifier {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
 
-    await _caminoRepository.updateProgreso(userId, nodoId);
-    // Recargar el progreso para reflejar el cambio en toda la UI
-    await loadProgreso(userId);
+    // Update mock progress
+    _mockLastCompletedId = nodoId;
+
+    // Optimistic UI update
+    final completedNodeIndex = _nodos.indexWhere((n) => n.id == nodoId);
+    if (completedNodeIndex != -1) {
+      _nodos[completedNodeIndex].status = NodoStatus.completed;
+
+      // Activate the next node if it exists
+      if (completedNodeIndex + 1 < _nodos.length) {
+        _nodos[completedNodeIndex + 1].status = NodoStatus.active;
+      }
+    }
+
+    notifyListeners();
   }
 }
