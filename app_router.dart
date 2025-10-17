@@ -42,11 +42,12 @@ class AppRouter {
       final isLoggedIn = authProvider.status == AuthStatus.Authenticated;
       final isLoggingIn = state.matchedLocation == '/login';
 
-      if (isLoggedIn)
+      if (isLoggedIn) {
         Provider.of<ProfileProvider>(
           context,
           listen: false,
         ).loadUserProfile(authProvider.user!);
+      }
 
       if (authProvider.status == AuthStatus.Uninitialized) return '/splash';
       if (!isLoggedIn) return '/login';

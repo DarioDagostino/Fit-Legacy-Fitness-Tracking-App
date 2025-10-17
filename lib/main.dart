@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/lib/auth_gate.dart';
-import 'firebase_options.dart';
+import 'package:fit_legacy/firebase_options.dart';
+import 'package:fit_legacy/screens/auth_screen.dart';
+import 'package:fit_legacy/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,18 +13,7 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class ThemeProvider with ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.light;
-
-  ThemeMode get themeMode => _themeMode;
-
-  void toggleTheme() {
-    _themeMode = _themeMode == ThemeMode.light
-        ? ThemeMode.dark
-        : ThemeMode.light;
-    notifyListeners();
-  }
-}
+final themeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
 class AppTheme {
   static const Color primarySeedColor = Colors.deepPurple;
@@ -66,92 +56,25 @@ class AppTheme {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          title: 'Fit Legacy',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: themeProvider.themeMode,
-          home: StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return const MyHomePage(title: 'Flutter Demo Home Page');
-              }
-              return const AuthGate();
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(widget.title),
-        actions: [
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return IconButton(
-                icon: Icon(
-                  themeProvider.themeMode == ThemeMode.dark
-                      ? Icons.light_mode
-                      : Icons.dark_mode,
-                ),
-                onPressed: () => themeProvider.toggleTheme(),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => FirebaseAuth.instance.signOut(),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
+    return MaterialApp(
+      title: 'Fit Legacy',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: theme,
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          }
+          return const AuthScreen();
+        },
       ),
     );
   }
